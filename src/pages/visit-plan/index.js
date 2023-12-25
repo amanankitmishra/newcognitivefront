@@ -82,7 +82,7 @@ const VisitPlan = () => {
           </Card>
         </Grid>
       </Grid>
-      <Sidebar show={open} sx={{ padding: 5 }} direction='right'>
+      <Sidebar show={open} sx={{ padding: 5 }}>
         <AddVisitPlanForm onSubmit={handleAddVisitPlan} onCancel={handleCancel} />
       </Sidebar>
     </div>

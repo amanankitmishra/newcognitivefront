@@ -107,7 +107,7 @@ const LiveProposals = () => {
           </Card>
         </Grid>
       </Grid>
-      <Sidebar show={open} sx={{ padding: 5 }} direction='right'>
+      <Sidebar show={open} sx={{ padding: 5 }}>
         <AddLiveProposalsForm onSubmit={handleAddLiveProposal} onCancel={handleCancel} />
       </Sidebar>
     </div>

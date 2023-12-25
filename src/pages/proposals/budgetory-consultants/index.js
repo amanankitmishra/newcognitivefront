@@ -107,7 +107,7 @@ const BudgetaryConsultantsProposal = () => {
           </Card>
         </Grid>
       </Grid>
-      <Sidebar show={open} sx={{ padding: 5 }} direction='right'>
+      <Sidebar show={open} sx={{ padding: 5 }}>
         <AddBudgetaryConsultantsProposalForm onSubmit={handleAddProposal} onCancel={handleCancel} />
       </Sidebar>
     </div>

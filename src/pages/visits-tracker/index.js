@@ -94,7 +94,7 @@ const VisitsTracker = () => {
           </Card>
         </Grid>
       </Grid>
-      <Sidebar show={open} sx={{ padding: 5 }} direction='right'>
+      <Sidebar show={open} sx={{ padding: 5 }}>
         <AddVisitsTrackerForm onSubmit={handleAddVisit} onCancel={handleCancel} />
       </Sidebar>
     </div>

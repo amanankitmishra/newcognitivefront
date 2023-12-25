@@ -97,7 +97,7 @@ const KeyCustomerDatabase = () => {
           </Card>
         </Grid>
       </Grid>
-      <Sidebar show={open} sx={{ padding: 5 }} direction='right'>
+      <Sidebar show={open} sx={{ padding: 5 }}>
         <AddKeyCustomerDatabaseForm
           onSubmit={handleAddKeyCustomer}
           onCancel={handleCancel}

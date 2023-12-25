@@ -198,7 +198,6 @@ const Oleads = () => {
         sx={{
           padding: 5
         }}
-        direction="right"
       >
         <AddOleadsForm onSubmit={handleAddOlead} onCancel={handleCancel} />
       </Sidebar>

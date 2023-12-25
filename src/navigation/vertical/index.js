@@ -6,6 +6,11 @@ const navigation = () => {
       icon: 'tabler:smart-home',
     },
     {
+      title: 'Clients',
+      path: '/clients',
+      icon: 'tabler:briefcase',
+    },
+    {
       title: 'Opportunity Leads',
       path: '/oleads',
       icon: 'tabler:loader-quarter'

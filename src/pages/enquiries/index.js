@@ -118,7 +118,6 @@ const Enquiries = () => {
         sx={{
           padding: 5,
         }}
-        direction='right'
       >
         <AddEnquiryForm onSubmit={handleAddEnquiry} onCancel={handleCancel} />
       </Sidebar>

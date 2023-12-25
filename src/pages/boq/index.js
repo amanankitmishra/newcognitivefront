@@ -74,7 +74,7 @@ const BOQ = () => {
           </Card>
         </Grid>
       </Grid>
-      <Sidebar show={open} sx={{ padding: 5 }} direction='right'>
+      <Sidebar show={open} sx={{ padding: 5 }}>
         <AddBOQForm onSubmit={handleAddBOQ} onCancel={handleCancel} />
       </Sidebar>
     </div>

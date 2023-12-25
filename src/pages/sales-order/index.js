@@ -335,7 +335,6 @@ const SalesOrder = () => {
         sx={{
           padding: 5,
         }}
-        direction='right'
       >
         <AddSalesOrderForm onSubmit={handleAddSalesOrder} onCancel={handleCancel} />
       </Sidebar>
