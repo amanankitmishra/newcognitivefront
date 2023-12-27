@@ -7,12 +7,19 @@ import {
   Paper,
   Grid,
   InputAdornment,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from '@mui/material';
 import { IconPlus, IconMinus } from '@tabler/icons-react';
 
 const initialFormData = {
   clientName: '',
   officeAddress: '',
+  nature: '',
+  lastVisit: '',
+  nextVisit: '',
   contactPersons: [
     {
       contactPerson: '',
@@ -25,9 +32,19 @@ const initialFormData = {
 const ClientForm = ({ onSubmit, onCancel }) => {
   const [formData, setFormData] = useState(initialFormData);
 
-  const handleInputChange = (index, field, value) => {
+  const handleInputChange = (field, value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+
+  const handleContactPersonChange = (index, field, value) => {
     const updatedContactPersons = [...formData.contactPersons];
-    updatedContactPersons[index][field] = value;
+    updatedContactPersons[index] = {
+      ...updatedContactPersons[index],
+      [field]: value,
+    };
 
     setFormData((prevData) => ({
       ...prevData,
@@ -62,26 +79,76 @@ const ClientForm = ({ onSubmit, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
+    setFormData(initialFormData);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <Typography variant="h5" sx={{ pb: 2 }}>Add Client</Typography>
       <Grid container spacing={2} maxWidth='sm'>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <TextField
             label="Client Name"
             fullWidth
             value={formData.clientName}
-            onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
+            onChange={(e) => handleInputChange('clientName', e.target.value)}
           />
+        </Grid>
+        <Grid item xs={6}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Nature</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="nature"
+              value={formData.nature}
+              label="Nature"
+              onChange={(e) => handleInputChange('nature', e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            >
+              <MenuItem value="contractor">Contractor</MenuItem>
+              <MenuItem value="consultant">Consultant</MenuItem>
+              <MenuItem value="others">Other</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={12}>
           <TextField
             label="Office Address"
             fullWidth
             value={formData.officeAddress}
-            onChange={(e) => setFormData({ ...formData, officeAddress: e.target.value })}
+            onChange={(e) => handleInputChange('officeAddress', e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            label="Last Visit"
+            fullWidth
+            type='date'
+            value={formData.lastVisit}
+            onChange={(e) => handleInputChange('lastVisit', e.target.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            InputProps={{
+              placeholder: 'dd/mm/yyyy',
+            }}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            label="Next Visit"
+            type='date'
+            fullWidth
+            value={formData.nextVisit}
+            onChange={(e) => handleInputChange('nextVisit', e.target.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            InputProps={{
+              placeholder: 'dd/mm/yyyy',
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -95,7 +162,7 @@ const ClientForm = ({ onSubmit, onCancel }) => {
                   label="Contact Person"
                   fullWidth
                   value={contactPerson.contactPerson}
-                  onChange={(e) => handleInputChange(index, 'contactPerson', e.target.value)}
+                  onChange={(e) => handleContactPersonChange(index, 'contactPerson', e.target.value)}
                   InputProps={{
                     startAdornment: (
                       index > 0 && (
@@ -114,7 +181,7 @@ const ClientForm = ({ onSubmit, onCancel }) => {
                   label="Contact Number"
                   fullWidth
                   value={contactPerson.contactNumber}
-                  onChange={(e) => handleInputChange(index, 'contactNumber', e.target.value)}
+                  onChange={(e) => handleContactPersonChange(index, 'contactNumber', e.target.value)}
                 />
               </Grid>
               <Grid item xs={4}>
@@ -122,7 +189,7 @@ const ClientForm = ({ onSubmit, onCancel }) => {
                   label="Contact Email"
                   fullWidth
                   value={contactPerson.contactEmail}
-                  onChange={(e) => handleInputChange(index, 'contactEmail', e.target.value)}
+                  onChange={(e) => handleContactPersonChange(index, 'contactEmail', e.target.value)}
                 />
               </Grid>
             </Grid>

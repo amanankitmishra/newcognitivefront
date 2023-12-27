@@ -1,14 +1,15 @@
 // ** MUI Imports
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import Sidebar from 'src/@core/components/sidebar'
 import { Button } from '@mui/material';
 import AddOleadsForm from './AddOleadsForm';
+import EditOleadsForm from './EditOleadsForm';
+import { IconEdit } from '@tabler/icons-react';
 
 const Oleads = () => {
 
@@ -84,6 +85,28 @@ const Oleads = () => {
       headerName: 'Lead Date',
       flex: 1,
     },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      renderCell: (params) => (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            transition: 'transform 0.5s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+        >
+          <IconEdit onClick={() => handleEdit(params.row)} />
+        </div>
+      ),
+      editable: false,
+      sortable: false,
+      filterable: false,
+    }
   ];
 
   const oleads = [
@@ -137,6 +160,8 @@ const Oleads = () => {
     }
   ]
   const [open, setOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(null);
   const toggleSidebar = () => setOpen(!open);
 
   const handleAddOlead = (formData) => {
@@ -148,6 +173,24 @@ const Oleads = () => {
   const handleCancel = () => {
     setOpen(false);
   };
+
+  const handleEdit = (rowData) => {
+    setSelectedRowData(rowData);
+    setEditModalOpen(true);
+  };
+
+  const handleEditModalClose = () => {
+    setEditModalOpen(false);
+  };
+
+  const handleEditSubmit = (editedData) => {
+    // Implement logic to update the opportunity lead with the edited data
+    console.log('Form submitted:', editedData);
+
+    // Close the edit modal
+    setEditModalOpen(false);
+  };
+
 
   return (
     <div>
@@ -200,6 +243,14 @@ const Oleads = () => {
         }}
       >
         <AddOleadsForm onSubmit={handleAddOlead} onCancel={handleCancel} />
+      </Sidebar>
+      <Sidebar
+        show={editModalOpen}
+        sx={{
+          padding: 5
+        }}
+      >
+        <EditOleadsForm data={selectedRowData} onSubmit={handleEditSubmit} onCancel={handleEditModalClose} />
       </Sidebar>
     </div>
   )

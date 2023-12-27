@@ -48,11 +48,6 @@ const navigation = () => {
       ]
     },
     {
-      title: 'Customers',
-      path: '/customers',
-      icon: 'tabler:user-search'
-    },
-    {
       title: 'Visits',
       path: '/visits-tracker',
       icon: 'tabler:adjustments-bolt'

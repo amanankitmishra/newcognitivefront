@@ -1,23 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Typography, Container, Button } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from 'src/@core/components/sidebar';
 import ClientForm from './AddClientForm';
 import { Card, CardHeader, CardContent } from '@mui/material';
 import { IconDotsVertical, IconEye } from '@tabler/icons-react';
 import Link from 'next/link';
 import Router from 'next/router';
+import { fetchClients, createClient } from 'src/utility/api';
+import { formatTimestamp } from 'src/utility/utility';
+import toast from 'react-hot-toast';
 
 
 const ClientsMain = () => {
   const [open, setOpen] = useState(false);
+  const [clients, setClients] = useState([]);
+
+  const fetchClientsData = async () => {
+    try {
+      const clientsDataFromServer = await fetchClients();
+
+      const clientsDataWithId = clientsDataFromServer.data.allClients.map((row) => ({
+        ...row,
+        id: row._id,
+        lastVisit: formatTimestamp(row.lastVisit),
+        nextVisit: formatTimestamp(row.nextVisit),
+      }));
+
+      setClients(clientsDataWithId);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchClientsData();
+  }, []);
+
+
+
 
   const toggleSidebar = () => {
     setOpen(!open);
   };
 
-  const handleAddClient = (formData) => {
-    console.log('Form submitted:', formData);
+  const handleAddClient = async (formData) => {
+    try {
+      const response = await createClient(formData);
+      if (response.status === 201) {
+
+        // Show success notification
+
+        toast.success('Client added successfully', { duration: 3000 });
+        fetchClientsData();
+
+      } else {
+
+        // Show error notification
+        toast.error('Error adding client', { duration: 3000 });
+      }
+    } catch (error) {
+      console.error('Error adding client:', error);
+      toast.error('Error adding client', { duration: 3000 });
+    }
+
+    // Close the sidebar in both success and error cases
     setOpen(false);
   };
 
@@ -38,6 +86,9 @@ const ClientsMain = () => {
       flex: 1,
 
     },
+    { field: 'nature', headerName: 'Nature Of Client', flex: 1 },
+    { field: 'lastVisit', headerName: 'Last Visit', flex: 1 },
+    { field: 'nextVisit', headerName: 'next Visit', flex: 1 },
     {
       field: 'actions',
       headerName: 'Actions',
@@ -63,16 +114,10 @@ const ClientsMain = () => {
     },
   ];
 
-  const rows = [
-    { id: 1, clientName: 'Client A', officeAddress: 'Address A' },
-    { id: 2, clientName: 'Client B', officeAddress: 'Address B' },
-
-    // Add more sample data as needed
-  ];
 
   return (
-    <Container>
-      <Grid container spacing={3}>
+    <div>
+      <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
             <CardHeader title='Clients 🚀'></CardHeader>
@@ -84,15 +129,28 @@ const ClientsMain = () => {
               </div>
               <div style={{ height: '400px', width: '100%' }}>
                 <DataGrid
-                  rows={rows}
+                  rows={clients}
                   columns={columns}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                  components={{ Toolbar: GridToolbar }}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {
+                        id: false,
+                        officeAddress: false,
+                        officeLocation: false,
+                        designation: false,
+                      },
+                    },
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 5,
+                      }
+                    }
+                  }}
+                  pageSizeOptions={[5, 10, 20]}
+                  slots={{ toolbar: GridToolbar }}
                 />
               </div>
             </CardContent>
-
           </Card>
         </Grid>
       </Grid>
@@ -100,7 +158,7 @@ const ClientsMain = () => {
         <ClientForm onSubmit={handleAddClient}
           onCancel={handleCancel} />
       </Sidebar>
-    </Container>
+    </div>
   );
 };
 
