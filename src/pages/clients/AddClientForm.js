@@ -18,8 +18,6 @@ const initialFormData = {
   clientName: '',
   officeAddress: '',
   nature: '',
-  lastVisit: '',
-  nextVisit: '',
   contactPersons: [
     {
       contactPerson: '',
@@ -103,9 +101,7 @@ const ClientForm = ({ onSubmit, onCancel }) => {
               value={formData.nature}
               label="Nature"
               onChange={(e) => handleInputChange('nature', e.target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
+
             >
               <MenuItem value="contractor">Contractor</MenuItem>
               <MenuItem value="consultant">Consultant</MenuItem>
@@ -119,36 +115,6 @@ const ClientForm = ({ onSubmit, onCancel }) => {
             fullWidth
             value={formData.officeAddress}
             onChange={(e) => handleInputChange('officeAddress', e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label="Last Visit"
-            fullWidth
-            type='date'
-            value={formData.lastVisit}
-            onChange={(e) => handleInputChange('lastVisit', e.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            InputProps={{
-              placeholder: 'dd/mm/yyyy',
-            }}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label="Next Visit"
-            type='date'
-            fullWidth
-            value={formData.nextVisit}
-            onChange={(e) => handleInputChange('nextVisit', e.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            InputProps={{
-              placeholder: 'dd/mm/yyyy',
-            }}
           />
         </Grid>
         <Grid item xs={12}>

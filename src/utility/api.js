@@ -35,9 +35,17 @@ export const createClient = (formData) => {
   return instance.post("/clients", formData)
 }
 
-export const fetchClientById = () => {
+export const fetchClientById = (id) => {
   return instance.get(`/clients/${id}`)
 }
+
+export const addContactPerson = (id, formData) => {
+  return instance.post(`/clients/addContactPerson/${id}`, formData)
+}
+
+export const addVisit = (id, formData) => {
+  return instance.post(`/clients/addVisit/${id}`, formData);
+};
 
 
 

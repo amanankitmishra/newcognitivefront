@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Typography, Container, Button } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from 'src/@core/components/sidebar';
 import ClientForm from './AddClientForm';
 import { Card, CardHeader, CardContent } from '@mui/material';
@@ -24,8 +23,6 @@ const ClientsMain = () => {
       const clientsDataWithId = clientsDataFromServer.data.allClients.map((row) => ({
         ...row,
         id: row._id,
-        lastVisit: formatTimestamp(row.lastVisit),
-        nextVisit: formatTimestamp(row.nextVisit),
       }));
 
       setClients(clientsDataWithId);
@@ -87,8 +84,6 @@ const ClientsMain = () => {
 
     },
     { field: 'nature', headerName: 'Nature Of Client', flex: 1 },
-    { field: 'lastVisit', headerName: 'Last Visit', flex: 1 },
-    { field: 'nextVisit', headerName: 'next Visit', flex: 1 },
     {
       field: 'actions',
       headerName: 'Actions',
