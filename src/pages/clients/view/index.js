@@ -48,6 +48,7 @@ const ViewClient = () => {
 
   const fetchClient = async () => {
     try {
+      console.log(id)
       const response = await fetchClientById(id);
 
       setClient(response.data);

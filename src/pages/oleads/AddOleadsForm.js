@@ -1,25 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { Typography } from '@mui/material';
+import { Typography, MenuItem } from '@mui/material';
+import { getClientList } from 'src/utility/api';
 
 const AddOleadsForm = ({ onSubmit, onCancel }) => {
+  const [clientList, setClientList] = useState([]);
+
   const [formData, setFormData] = useState({
-    client: '',
-    endCustomer: '',
+    clientId: '',
     project: '',
     siteAddress: '',
     siteLocation: '',
-    contactName: '',
-    designation: '',
-    contactEmail: '',
-    contactMobile: '',
-    opportunityFor: '',
+    oleadFor: '',
     enquiryExpectedBy: '',
     leadSource: '',
     leadDate: '',
   });
+
+  const fetchClientList = async () => {
+    try {
+      const response = await getClientList();
+      setClientList(response.data);
+    } catch (error) {
+      console.log('Error fetching client list:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchClientList();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,143 +55,96 @@ const AddOleadsForm = ({ onSubmit, onCancel }) => {
         <Grid item xs={6}>
           <TextField
             label="Client"
-            name="client"
-            value={formData.client}
-            onChange={handleChange}
+            select
             fullWidth
-            required
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          <TextField
-            label="End Customer"
-            name="endCustomer"
-            value={formData.endCustomer}
+            name="clientId"
+            value={formData.clientId}
             onChange={handleChange}
-            fullWidth
             required
-          />
+          >
+            {clientList.map((client) => (
+              <MenuItem key={client._id} value={client._id}>
+                {client.clientName}
+              </MenuItem>
+            ))}
+          </TextField>
         </Grid>
 
         <Grid item xs={6}>
           <TextField
             label="Project"
+            fullWidth
             name="project"
             value={formData.project}
             onChange={handleChange}
-            fullWidth
-            required
           />
         </Grid>
 
         <Grid item xs={6}>
           <TextField
             label="Site Address"
+            fullWidth
             name="siteAddress"
             value={formData.siteAddress}
             onChange={handleChange}
-            fullWidth
-            required
           />
         </Grid>
 
         <Grid item xs={6}>
           <TextField
             label="Site Location"
+            fullWidth
             name="siteLocation"
             value={formData.siteLocation}
             onChange={handleChange}
-            fullWidth
-            required
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          <TextField
-            label="Contact Name"
-            name="contactName"
-            value={formData.contactName}
-            onChange={handleChange}
-            fullWidth
-            required
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          <TextField
-            label="Designation"
-            name="designation"
-            value={formData.designation}
-            onChange={handleChange}
-            fullWidth
-            required
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          <TextField
-            label="Contact Email"
-            name="contactEmail"
-            value={formData.contactEmail}
-            onChange={handleChange}
-            fullWidth
-            required
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          <TextField
-            label="Contact Mobile"
-            name="contactMobile"
-            value={formData.contactMobile}
-            onChange={handleChange}
-            fullWidth
-            required
           />
         </Grid>
 
         <Grid item xs={6}>
           <TextField
             label="Opportunity For"
-            name="opportunityFor"
-            value={formData.opportunityFor}
-            onChange={handleChange}
             fullWidth
-            required
+            name="oleadFor"
+            value={formData.oleadFor}
+            onChange={handleChange}
           />
         </Grid>
 
         <Grid item xs={6}>
           <TextField
             label="Enquiry Expected By"
+            type="date"
+            fullWidth
             name="enquiryExpectedBy"
             value={formData.enquiryExpectedBy}
             onChange={handleChange}
-            fullWidth
-            required
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
         </Grid>
 
         <Grid item xs={6}>
           <TextField
             label="Lead Source"
+            fullWidth
             name="leadSource"
             value={formData.leadSource}
             onChange={handleChange}
-            fullWidth
-            required
           />
         </Grid>
 
         <Grid item xs={6}>
           <TextField
             label="Lead Date"
+            type="date"
+            fullWidth
             name="leadDate"
             value={formData.leadDate}
             onChange={handleChange}
-            fullWidth
-            required
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
         </Grid>
       </Grid>

@@ -47,6 +47,10 @@ export const addVisit = (id, formData) => {
   return instance.post(`/clients/addVisit/${id}`, formData);
 };
 
+export const getClientList = () => {
+  return instance.get("/allClients/names")
+}
+
 
 
 // Opportunity Leads
@@ -54,6 +58,10 @@ export const addVisit = (id, formData) => {
 
 export const fetchOleads = () => {
   return instance.get("/oleads")
+}
+
+export const createOlead = (formData) => {
+  return instance.post("/oleads", formData)
 }
 
 

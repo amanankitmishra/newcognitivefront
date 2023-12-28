@@ -1,5 +1,6 @@
 // ** MUI Imports
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Router from 'next/router';
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import CardHeader from '@mui/material/CardHeader'
@@ -10,8 +11,15 @@ import { Button } from '@mui/material';
 import AddOleadsForm from './AddOleadsForm';
 import EditOleadsForm from './EditOleadsForm';
 import { IconEdit } from '@tabler/icons-react';
+import { createOlead, fetchOleads } from 'src/utility/api';
 
 const Oleads = () => {
+
+
+
+  const handleViewClient = (clientId) => {
+    Router.push(`/clients/view?id=${clientId}`);
+  };
 
   const columns = [
     {
@@ -20,15 +28,23 @@ const Oleads = () => {
       flex: 1,
     },
     {
-      field: 'client',
+      field: 'clientId',
       headerName: 'Client',
       flex: 1,
+      renderCell: (params) => (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            textDecoration: 'underline',
+          }}
+          onClick={() => handleViewClient(params.row._id)}
+        >
+          {params.row.clientId}
+        </div>
+      ),
 
-    },
-    {
-      field: 'endCustomer',
-      headerName: 'End Customer',
-      flex: 1
     },
     {
       field: 'project',
@@ -46,27 +62,7 @@ const Oleads = () => {
       flex: 1,
     },
     {
-      field: 'contactName',
-      headerName: 'Contact Name',
-      flex: 1,
-    },
-    {
-      field: 'designation',
-      headerName: 'Designation',
-      flex: 1,
-    },
-    {
-      field: 'contactEmail',
-      headerName: 'Contact Email',
-      flex: 1,
-    },
-    {
-      field: 'contactMobile',
-      headerName: 'Contact Mobile',
-      flex: 1,
-    },
-    {
-      field: 'opportunityFor',
+      field: 'oleadFor',
       headerName: 'Opportunity For',
       flex: 1,
     },
@@ -109,66 +105,43 @@ const Oleads = () => {
     }
   ];
 
-  const oleads = [
-    {
-      id: 1,
-      client: 'Client 1',
-      endCustomer: 'End Customer 1',
-      project: 'project 1',
-      siteAddress: 'Site Address 1',
-      siteLocation: 'Site Location 1',
-      contactName: 'Contact Name',
-      designation: 'Designation',
-      contactEmail: 'Contact email',
-      contactMobile: 'Contact Mobile',
-      opportunityFor: 'Opportunity for',
-      enquiryExpectedBy: 'Enquiry nExpected By',
-      leadSource: 'Lead Source 1',
-      leadDate: ' Lead Date 1'
-    },
-    {
-      id: 2,
-      client: 'Client 2',
-      endCustomer: 'End Customer 2',
-      project: 'project 2',
-      siteAddress: 'Site Address 2',
-      siteLocation: 'Site Location 2',
-      contactName: 'Contact Name',
-      designation: 'Designation',
-      contactEmail: 'Contact email',
-      contactMobile: 'Contact Mobile',
-      opportunityFor: 'Opportunity for',
-      enquiryExpectedBy: 'Enquiry nExpected By',
-      leadSource: 'Lead Source 2',
-      leadDate: ' Lead Date 2'
-    },
-    {
-      id: 3,
-      client: 'Client 3',
-      endCustomer: 'End Customer 3',
-      project: 'project 3',
-      siteAddress: 'Site Address 3',
-      siteLocation: 'Site Location 3',
-      contactName: 'Contact Name',
-      designation: 'Designation',
-      contactEmail: 'Contact email',
-      contactMobile: 'Contact Mobile',
-      opportunityFor: 'Opportunity for',
-      enquiryExpectedBy: 'Enquiry nExpected By',
-      leadSource: 'Lead Source 3',
-      leadDate: ' Lead Date 3'
-    }
-  ]
+
   const [open, setOpen] = useState(false);
+  const [oleads, setOleads] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
   const toggleSidebar = () => setOpen(!open);
 
-  const handleAddOlead = (formData) => {
-    console.log('Form submitted:', formData);
+  const handleAddOlead = async (formData) => {
+
+    try {
+      const response = await createOlead(formData);
+      getOleads()
+    } catch {
+      console.log("error")
+    }
 
     setOpen(false);
   };
+
+  const getOleads = async () => {
+    try {
+      const response = await fetchOleads();
+
+      const ccc = response.data.allOleads.map((row) => ({
+        ...row,
+        id: row._id,
+        clientId: row.clientId.clientName
+      }));
+      setOleads(ccc)
+    } catch {
+      console.log("oleads not fetched")
+    }
+  }
+
+  useEffect(() => {
+    getOleads()
+  }, [])
 
   const handleCancel = () => {
     setOpen(false);
