@@ -11,8 +11,9 @@ import { Button } from '@mui/material';
 import AddOleadsForm from './AddOleadsForm';
 import EditOleadsForm from './EditOleadsForm';
 import { IconEdit } from '@tabler/icons-react';
-import { createOlead, fetchOleads } from 'src/utility/api';
+import { createOlead, fetchOleads, editOlead } from 'src/utility/api';
 import { formatTimestamp } from 'src/utility/utility';
+import toast from 'react-hot-toast';
 
 const Oleads = () => {
 
@@ -120,9 +121,11 @@ const Oleads = () => {
 
     try {
       const response = await createOlead(formData);
+      toast.success('Opportunity Lead added successfully', { duration: 3000 });
       getOleads()
     } catch {
       console.log("error")
+      toast.error('Could not add opportunity lead.', { duration: 3000 });
     }
 
     setOpen(false);
@@ -163,12 +166,20 @@ const Oleads = () => {
     setEditModalOpen(false);
   };
 
-  const handleEditSubmit = (editedData) => {
-    // Implement logic to update the opportunity lead with the edited data
-    console.log('Form submitted:', editedData);
+  const handleEditSubmit = async (id, editedData) => {
+
+    try {
+      const response = await editOlead(id, editedData)
+
+      toast.success('Opportunity Lead Edited successfully', { duration: 3000 });
+
+    } catch {
+      toast.error('Error in updating Opportunity Lead', { duration: 3000 });
+    }
 
     // Close the edit modal
     setEditModalOpen(false);
+    getOleads();
   };
 
 

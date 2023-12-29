@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -8,60 +8,72 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Sidebar from 'src/@core/components/sidebar';
 import { Button } from '@mui/material';
 import AddEnquiryForm from './AddEnquiriesForm';
+import { createEnquiry, fetchEnquiries } from 'src/utility/api';
+import toast from 'react-hot-toast';
 
 const Enquiries = () => {
   const columns = [
     { field: 'id', headerName: 'S.No.', flex: 1 },
-    { field: 'quotationNumber', headerName: 'Quotation No.', flex: 1 },
-    { field: 'enquiryDate', headerName: 'Enquiry Date', flex: 1 },
-    { field: 'client', headerName: 'Client', flex: 1 },
-    { field: 'project', headerName: 'Project', flex: 1 },
-    { field: 'spvSwh', headerName: 'SPV / SWH', flex: 1 },
-    { field: 'capacity', headerName: 'Capacity', flex: 1 },
-    { field: 'uom', headerName: 'UOM', flex: 1 },
-    { field: 'offerSubmitted', headerName: 'Offer Submitted', flex: 1 },
-    { field: 'offerSubmissionDate', headerName: 'Offer Submission Date', flex: 1 },
-    { field: 'valueQuoted', headerName: 'Value Quoted', flex: 1 },
-    { field: 'revisionNumber', headerName: 'Revision Number', flex: 1 },
-    { field: 'ratePerWatt', headerName: 'Rate Per Watt', flex: 1 },
-    { field: 'quotedMargin', headerName: 'Quoted Margin', flex: 1 },
-    { field: 'clientContactPerson', headerName: 'Client Contact Person', flex: 1 },
-    { field: 'clientContactNumber', headerName: 'Client Contact Number', flex: 1 },
-    { field: 'clientContactEmail', headerName: 'Client Contact Email', flex: 1 },
-    { field: 'remark', headerName: 'Remark', flex: 1 },
-  ];
-
-
-
-  const enquiries = [
     {
-      id: 1,
-      quotationNumber: 'Q123',
-      enquiryDate: '2023-01-01',
-      client: 'Client 1',
-      project: 'Project A',
-      spvSwh: 'SPV',
-      capacity: '100 kW',
-      uom: 'kWh',
-      offerSubmitted: true,
-      offerSubmissionDate: '2023-01-15',
-      valueQuoted: '$50,000',
-      revisionNumber: 1,
-      ratePerWatt: '$2.50',
-      quotedMargin: '15%',
-      clientContactPerson: 'John Doe',
-      clientContactNumber: '123-456-7890',
-      clientContactEmail: 'john@example.com',
-      remark: 'Sample remark',
+      field: 'clientName',
+      headerName: 'Client',
+      flex: 1,
+      renderCell: (params) => (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            textDecoration: 'none',
+            textTransform: 'uppercase'
+          }}
+          onClick={() => handleViewClient(params.row.clientId)}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+        >
+          {params.row.clientName}
+        </div>
+      ),
+
     },
+    { field: 'project', headerName: 'Project', flex: 1 },
+    { filed: 'projectType', headerName: 'Type', flex: 1 }
   ];
+
 
   const [open, setOpen] = useState(false);
+  const [enquiries, setEnquiries] = useState([])
+
+  const getEnquiries = async () => {
+    try {
+      const res = await fetchEnquiries();
+
+      const ccc = res.data.allEnquiries.map((row) => ({
+        ...row,
+        id: row._id,
+        clientId: row.clientId._id,
+        clientName: row.clientId.clientName,
+      }));
+      setEnquiries(ccc);
+    } catch {
+      console.log("error getting enquiries");
+    }
+  }
+
+  useEffect(() => {
+    getEnquiries();
+  }, [])
 
   const toggleSidebar = () => setOpen(!open);
 
-  const handleAddEnquiry = (formData) => {
-    console.log('Form submitted:', formData);
+  const handleAddEnquiry = async (formData) => {
+
+    try {
+      const response = createEnquiry(formData)
+      toast.success('Enquiry Created Successfully', { duration: 3000 })
+    } catch {
+      toast.error('Error Creating Enquiry', { duration: 3000 })
+    }
     setOpen(false);
   };
 

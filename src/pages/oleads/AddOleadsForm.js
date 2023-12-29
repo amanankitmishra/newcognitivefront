@@ -8,7 +8,7 @@ import { getClientList } from 'src/utility/api';
 const AddOleadsForm = ({ onSubmit, onCancel }) => {
   const [clientList, setClientList] = useState([]);
 
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     clientId: '',
     project: '',
     siteAddress: '',
@@ -17,7 +17,9 @@ const AddOleadsForm = ({ onSubmit, onCancel }) => {
     enquiryExpectedBy: '',
     leadSource: '',
     leadDate: '',
-  });
+  }
+
+  const [formData, setFormData] = useState(initialFormData);
 
   const fetchClientList = async () => {
     try {
@@ -43,6 +45,7 @@ const AddOleadsForm = ({ onSubmit, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
+    setFormData(initialFormData);
   };
 
   return (
