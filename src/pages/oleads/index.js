@@ -12,6 +12,7 @@ import AddOleadsForm from './AddOleadsForm';
 import EditOleadsForm from './EditOleadsForm';
 import { IconEdit } from '@tabler/icons-react';
 import { createOlead, fetchOleads } from 'src/utility/api';
+import { formatTimestamp } from 'src/utility/utility';
 
 const Oleads = () => {
 
@@ -28,7 +29,7 @@ const Oleads = () => {
       flex: 1,
     },
     {
-      field: 'clientId',
+      field: 'clientName',
       headerName: 'Client',
       flex: 1,
       renderCell: (params) => (
@@ -37,11 +38,14 @@ const Oleads = () => {
             display: 'flex',
             alignItems: 'center',
             cursor: 'pointer',
-            textDecoration: 'underline',
+            textDecoration: 'none',
+            textTransform: 'uppercase'
           }}
-          onClick={() => handleViewClient(params.row._id)}
+          onClick={() => handleViewClient(params.row.clientId)}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
         >
-          {params.row.clientId}
+          {params.row.clientName}
         </div>
       ),
 
@@ -131,7 +135,10 @@ const Oleads = () => {
       const ccc = response.data.allOleads.map((row) => ({
         ...row,
         id: row._id,
-        clientId: row.clientId.clientName
+        clientId: row.clientId._id,
+        clientName: row.clientId.clientName,
+        enquiryExpectedBy: formatTimestamp(row.enquiryExpectedBy),
+        leadDate: formatTimestamp(row.leadDate)
       }));
       setOleads(ccc)
     } catch {
