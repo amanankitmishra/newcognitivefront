@@ -8,8 +8,12 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Sidebar from 'src/@core/components/sidebar';
 import { Button } from '@mui/material';
 import AddEnquiryForm from './AddEnquiriesForm';
-import { createEnquiry, fetchEnquiries } from 'src/utility/api';
+import EditEnquiryForm from './EditEnquiryForm';
+import { createEnquiry, fetchEnquiries, editEnquiry } from 'src/utility/api';
 import toast from 'react-hot-toast';
+import Router from 'next/router';
+import { formatTimestamp } from 'src/utility/utility';
+import { IconEdit } from '@tabler/icons-react';
 
 const Enquiries = () => {
   const columns = [
@@ -37,12 +41,46 @@ const Enquiries = () => {
 
     },
     { field: 'project', headerName: 'Project', flex: 1 },
-    { filed: 'projectType', headerName: 'Type', flex: 1 }
+    { field: 'projectType', headerName: 'Type', flex: 1 },
+    { field: 'uom', headerName: 'UOM', flex: 1 },
+    { field: 'offerSubmitted', headerName: "Offer Submitted", flex: 1 },
+    { field: 'offerSubmissionDate', headerName: "Offer Submission Date", flex: 1 },
+    { field: 'quotedValue', headerName: "Quoted Value", flex: 1 },
+    { field: 'quotedMarginPercentage', headerName: "Quoted Margin Percentage", flex: 1 },
+    { field: 'quotedMarginValue', headerName: "Quoted Margin Value", flex: 1 },
+    { field: 'ratePerWatt', headerName: "Rate Per Watt", flex: 1 },
+    { field: 'revision', headerName: "Revision", flex: 1 },
+    { field: 'remark', headerName: 'Remark', flex: 1 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      renderCell: (params) => (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            transition: 'transform 0.5s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+        >
+          <IconEdit onClick={() => handleEdit(params.row)} />
+        </div>
+      ),
+      editable: false,
+      sortable: false,
+      filterable: false,
+    }
+
   ];
 
 
   const [open, setOpen] = useState(false);
-  const [enquiries, setEnquiries] = useState([])
+  const [enquiries, setEnquiries] = useState([]);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(null);
 
   const getEnquiries = async () => {
     try {
@@ -53,8 +91,10 @@ const Enquiries = () => {
         id: row._id,
         clientId: row.clientId._id,
         clientName: row.clientId.clientName,
+        offerSubmissionDate: formatTimestamp(row.offerSubmissionDate)
       }));
       setEnquiries(ccc);
+      console.log(ccc);
     } catch {
       console.log("error getting enquiries");
     }
@@ -81,6 +121,35 @@ const Enquiries = () => {
     setOpen(false);
   };
 
+  const handleEdit = (rowData) => {
+    setSelectedRowData(rowData);
+    setEditModalOpen(true);
+  };
+
+  const handleEditModalClose = () => {
+    setEditModalOpen(false);
+  };
+
+  const handleEditSubmit = async (id, editedData) => {
+
+    try {
+      const response = await editEnquiry(id, editedData)
+
+      toast.success('Enquiry Updated successfully', { duration: 3000 });
+
+    } catch {
+      toast.error('Error in updating Enquiry', { duration: 3000 });
+    }
+
+    // Close the edit modal
+    setEditModalOpen(false);
+    getEnquiries();
+  };
+
+  const handleViewClient = (clientId) => {
+    Router.push(`/clients/view?id=${clientId}`);
+  };
+
   return (
     <div>
       <Grid container spacing={6}>
@@ -101,14 +170,9 @@ const Enquiries = () => {
                     columns: {
                       columnVisibilityModel: {
                         id: false,
-                        quotationNumber: false,
-                        offerSubmitted: false,
-                        revisionNumber: false,
-                        clientContactEmail: false,
-                        clientContactNumber: false,
-                        clientContactPerson: false,
                         offerSubmissionDate: false,
-                        ratePerWatt: false,
+                        quotedMarginValue: false,
+                        ratePerWatt: false
                       },
                     },
                     pagination: {
@@ -132,6 +196,14 @@ const Enquiries = () => {
         }}
       >
         <AddEnquiryForm onSubmit={handleAddEnquiry} onCancel={handleCancel} />
+      </Sidebar>
+      <Sidebar
+        show={editModalOpen}
+        sx={{
+          padding: 5
+        }}
+      >
+        <EditEnquiryForm data={selectedRowData} onSubmit={handleEditSubmit} onCancel={handleEditModalClose} />
       </Sidebar>
     </div>
   );

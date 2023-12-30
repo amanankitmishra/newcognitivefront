@@ -51,6 +51,10 @@ export const getClientList = () => {
   return instance.get("/allClients/names")
 }
 
+export const fetchAllVisits = () => {
+  return instance.get("/visits");
+}
+
 
 
 // Opportunity Leads
@@ -77,5 +81,13 @@ export const createEnquiry = (formData) => {
 export const fetchEnquiries = () => {
   return instance.get("/enquiries")
 }
+
+export const editEnquiry = (id, formData) => {
+  return instance.patch(`/enquiries/${id}`, formData)
+}
+
+
+
+
 
 export default instance
