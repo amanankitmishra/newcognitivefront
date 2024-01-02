@@ -49,7 +49,7 @@ const MyCalendar = () => {
         events={events}
         startAccessor="start"
         endAccessor="end"
-        views={['month']}
+        views={['month', 'week', 'day']}
         defaultView="month"
         onSelectEvent={handleEventClick}
         selectable

@@ -24,7 +24,11 @@ const navigation = () => {
       title: 'Proposals',
       icon: 'tabler:fidget-spinner',
       children: [
-
+        {
+          title: 'All',
+          icon: 'tabler:fidget-spinner',
+          path: '/proposals'
+        },
         {
           title: 'Live',
           icon: 'tabler:fidget-spinner',
@@ -48,13 +52,8 @@ const navigation = () => {
       ]
     },
     {
-      title: 'Visits',
-      path: '/visits-tracker',
-      icon: 'tabler:adjustments-bolt'
-    },
-    {
-      title: 'Visit Plan',
-      path: '/visit-plan',
+      title: 'Visit Calendar',
+      path: '/calendar',
       icon: 'tabler:plane-inflight'
     },
     {

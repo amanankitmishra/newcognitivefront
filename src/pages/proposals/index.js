@@ -8,12 +8,12 @@ import CardContent from '@mui/material/CardContent';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Sidebar from 'src/@core/components/sidebar';
 import { Button } from '@mui/material';
-import AddProposalForm from '../AddProposalForm';
-import { createProposal, fetchLiveProposals } from 'src/utility/api';
+import AddProposalForm from './AddProposalForm';
+import { createProposal, fetchProposals } from 'src/utility/api';
 import toast from 'react-hot-toast';
 import Router from 'next/router';
 
-const LiveProposals = () => {
+const Proposals = () => {
 
   const handleViewClient = (clientId) => {
     Router.push(`/clients/view?id=${clientId}`);
@@ -69,7 +69,7 @@ const LiveProposals = () => {
   const [allProposals, setAllProposals] = useState([]);
 
   const getAllProposals = async () => {
-    const res = await fetchLiveProposals()
+    const res = await fetchProposals()
 
     console.log(res.data)
 
@@ -112,7 +112,7 @@ const LiveProposals = () => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Live Proposals 🚀'></CardHeader>
+            <CardHeader title='All Proposals 🚀'></CardHeader>
             <CardContent>
               <div style={{ textAlign: 'right' }}>
                 <Button onClick={toggleSidebar} variant='contained' color='primary'>
@@ -155,4 +155,4 @@ const LiveProposals = () => {
   );
 };
 
-export default LiveProposals;
+export default Proposals;

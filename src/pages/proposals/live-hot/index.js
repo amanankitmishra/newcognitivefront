@@ -1,5 +1,5 @@
-// LiveHotProposals.jsx
-import React, { useState } from 'react';
+// LiveProposals.jsx
+import React, { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -8,54 +8,99 @@ import CardContent from '@mui/material/CardContent';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Sidebar from 'src/@core/components/sidebar';
 import { Button } from '@mui/material';
-import AddLiveHotProposalForm from './AddLiveHotProposalForm';
+import AddProposalForm from '../AddProposalForm';
+import { createProposal, fetchLiveHotProposals } from 'src/utility/api';
+import toast from 'react-hot-toast';
+import Router from 'next/router';
 
 const LiveHotProposals = () => {
+
+  const handleViewClient = (clientId) => {
+    Router.push(`/clients/view?id=${clientId}`);
+  };
+
   const columns = [
     { field: 'id', headerName: 'S.No.', flex: 1 },
-    { field: 'client', headerName: 'Client', flex: 1 },
+    {
+      field: 'clientName', headerName: 'Client', flex: 1, renderCell: (params) => (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            textDecoration: 'none',
+            textTransform: 'uppercase'
+          }}
+          onClick={() => handleViewClient(params.row.clientId)}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+        >
+          {params.row.clientName}
+        </div>
+      ),
+    },
+    {
+      field: 'status', headerName: 'Status', flex: 1, renderCell: (params) => (
+        <div
+          style={{
+            color: params.row.status === 'HOT' ? 'red' : params.row.status === 'LIVE-HOT' ? 'green' : 'black',
+            fontWeight: 'bold',
+          }}
+        >
+          {params.row.status}
+        </div>
+      ),
+    },
+    { field: 'budgetory', headerName: 'Budgetory', flex: 1 },
     { field: 'project', headerName: 'Project', flex: 1 },
-    { field: 'spvSwh', headerName: 'SPV / SWH', flex: 1 },
+    { field: 'projectType', headerName: 'SPV / SWH', flex: 1 },
     { field: 'capacity', headerName: 'Capacity', flex: 1 },
     { field: 'uom', headerName: 'UOM', flex: 1 },
     { field: 'quotedValue', headerName: 'Quoted Value', flex: 1 },
     { field: 'ratePerWatt', headerName: 'Rate Per Watt', flex: 1 },
-    { field: 'profitMargin', headerName: 'Profit Margin', flex: 1 },
-    { field: 'profitValue', headerName: 'Profit Value', flex: 1 },
-    { field: 'contactPerson', headerName: 'Contact Person', flex: 1 },
-    { field: 'contactNumber', headerName: 'Contact Number', flex: 1 },
-    { field: 'remarks', headerName: 'Remarks', flex: 1 },
+    { field: 'quotedMarginValue', headerName: 'Quoted Margin Value', flex: 1 },
+    { field: 'quotedMarginPercentage', headerName: 'Quoted Margin Percentage', flex: 1 },
+    { field: 'remark', headerName: 'Remarks', flex: 1 },
   ];
 
-  const liveHotProposals = [
-    {
-      id: 1,
-      client: 'ABC Corp',
-      project: 'Hot Project 1',
-      spvSwh: 'SPV',
-      capacity: '120 kW',
-      uom: 'KWp',
-      quotedValue: '$12,000',
-      ratePerWatt: '$1.10',
-      profitMargin: '18%',
-      profitValue: '$2,160',
-      contactPerson: 'Alice Johnson',
-      contactNumber: '111-222-3333',
-      remarks: 'Lorem ipsum dolor sit amet',
-    },
 
-    // Add more live hot proposal data as needed
-  ];
 
   const [open, setOpen] = useState(false);
+  const [allProposals, setAllProposals] = useState([]);
+
+  const getAllProposals = async () => {
+    const res = await fetchLiveHotProposals()
+
+    console.log(res.data)
+
+    const ccc = res.data.map((row) => ({
+      ...row,
+      id: row._id,
+      clientId: row.clientId._id,
+      clientName: row.clientId.clientName,
+    }));
+    setAllProposals(ccc)
+  }
+
+  useEffect(() => {
+    getAllProposals();
+  }, [])
 
   const toggleSidebar = () => setOpen(!open);
 
-  const handleAddLiveHotProposal = (formData) => {
-    console.log('Form submitted:', formData);
+  const handleAddProposal = async (formData) => {
+
+    try {
+      const res = await createProposal(formData)
+      toast.success("Proposal Added Successfully.", { duration: 3000 })
+      getAllProposals()
+    } catch {
+      toast.error("Error creating Proposal", { duration: 3000 })
+    }
+
     setOpen(false);
 
-    // Add logic to update live hot proposals state or send data to API
+    // Add logic to update live proposals state or send data to API
   };
 
   const handleCancel = () => {
@@ -71,26 +116,22 @@ const LiveHotProposals = () => {
             <CardContent>
               <div style={{ textAlign: 'right' }}>
                 <Button onClick={toggleSidebar} variant='contained' color='primary'>
-                  Add Live Hot Proposal
+                  Add Proposal
                 </Button>
               </div>
               <div style={{ height: '400px' }}>
                 <DataGrid
-                  rows={liveHotProposals}
+                  rows={allProposals}
                   columns={columns}
                   initialState={{
                     columns: {
                       columnVisibilityModel: {
                         id: false,
-                        endCustomer: false,
-                        profitValue: false,
-                        siteAddress: false,
-                        designation: false,
-                        contactEmail: false,
-                        contactNumber: false,
-                        contactPerson: false,
-                        leadSource: false,
-                        remarks: false
+                        quotedMarginValue: false,
+                        quotedMarginPercentage: false,
+                        projectType: false,
+                        uom: false,
+                        remark: false
                       },
                     },
                     pagination: {
@@ -108,7 +149,7 @@ const LiveHotProposals = () => {
         </Grid>
       </Grid>
       <Sidebar show={open} sx={{ padding: 5 }}>
-        <AddLiveHotProposalForm onSubmit={handleAddLiveHotProposal} onCancel={handleCancel} />
+        <AddProposalForm onSubmit={handleAddProposal} onCancel={handleCancel} />
       </Sidebar>
     </div>
   );

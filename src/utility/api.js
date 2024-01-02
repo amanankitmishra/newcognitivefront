@@ -87,6 +87,46 @@ export const editEnquiry = (id, formData) => {
 }
 
 
+// BOQ
+
+export const createBoq = (formData) => {
+  return instance.post("/boqs", formData)
+}
+
+export const fetchBoqs = () => {
+  return instance.get("/boqs");
+}
+
+export const editBoq = (id, formData) => {
+  return instance.patch(`/boqs/${id}`, formData)
+}
+
+
+//Proposal
+
+export const createProposal = (formData) => {
+  return instance.post("/proposals", formData)
+}
+
+export const fetchProposals = () => {
+  return instance.get("/proposals")
+}
+
+export const fetchLiveProposals = () => {
+  return instance.get("/liveproposals")
+}
+
+export const fetchLiveHotProposals = () => {
+  return instance.get("/livehotproposals")
+}
+
+export const fetchcontractorproposals = () => {
+  return instance.get("/contractorproposals")
+}
+
+export const fetchconsultantproposals = () => {
+  return instance.get("/consultantproposals")
+}
 
 
 
