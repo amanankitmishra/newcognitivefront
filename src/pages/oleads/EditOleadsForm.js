@@ -43,6 +43,7 @@ const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
         enquiryExpectedBy: data.enquiryExpectedBy || '',
         leadSource: data.leadSource || '',
         leadDate: data.leadDate || '',
+        remark: data.remark || '',
       });
     }
   }, [data]);
@@ -160,6 +161,15 @@ const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
             InputLabelProps={{
               shrink: true,
             }}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            label="Remark"
+            fullWidth
+            name="remark"
+            value={formData.remark}
+            onChange={handleChange}
           />
         </Grid>
       </Grid>

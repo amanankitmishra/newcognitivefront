@@ -87,6 +87,11 @@ const Oleads = () => {
       flex: 1,
     },
     {
+      field: 'remark',
+      headerName: 'Remark',
+      flex: 1
+    },
+    {
       field: 'actions',
       headerName: 'Actions',
       flex: 1,

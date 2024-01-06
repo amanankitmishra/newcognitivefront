@@ -250,6 +250,12 @@ const ViewClient = () => {
                     onChange={(e) => setNewVisit({ ...newVisit, visitDate: e.target.value })}
                     fullWidth
                     margin="normal"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      placeholder: 'dd/mm/yyyy',
+                    }}
                   />
                   <TextField
                     label="Purpose"

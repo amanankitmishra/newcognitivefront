@@ -17,6 +17,7 @@ const AddOleadsForm = ({ onSubmit, onCancel }) => {
     enquiryExpectedBy: '',
     leadSource: '',
     leadDate: '',
+    remark: '',
   }
 
   const [formData, setFormData] = useState(initialFormData);
@@ -148,6 +149,15 @@ const AddOleadsForm = ({ onSubmit, onCancel }) => {
             InputLabelProps={{
               shrink: true,
             }}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            label="Remark"
+            fullWidth
+            name="remark"
+            value={formData.remark}
+            onChange={handleChange}
           />
         </Grid>
       </Grid>
