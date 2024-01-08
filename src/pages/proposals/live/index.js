@@ -51,7 +51,6 @@ const LiveProposals = () => {
         </div>
       ),
     },
-    { field: 'budgetory', headerName: 'Budgetory', flex: 1 },
     { field: 'project', headerName: 'Project', flex: 1 },
     { field: 'projectType', headerName: 'SPV / SWH', flex: 1 },
     { field: 'capacity', headerName: 'Capacity', flex: 1 },

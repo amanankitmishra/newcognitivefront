@@ -142,6 +142,10 @@ export const fetchProposalById = (id) => {
   return instance.get(`/proposals/${id}`)
 }
 
+export const editProposal = (id) => {
+  return instance.put(`/proposals/${id}`)
+}
+
 
 
 export default instance

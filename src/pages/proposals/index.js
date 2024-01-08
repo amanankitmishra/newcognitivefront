@@ -9,14 +9,16 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Sidebar from 'src/@core/components/sidebar';
 import { Button } from '@mui/material';
 import AddProposalForm from './AddProposalForm';
-import { createProposal, fetchProposals } from 'src/utility/api';
+import EditProposalForm from './EditProposalForm';
+import { createProposal, fetchProposals, editProposal } from 'src/utility/api';
 import toast from 'react-hot-toast';
 import Router from 'next/router';
+import { IconEye, IconEdit } from '@tabler/icons-react';
 
 const Proposals = () => {
 
-  const handleViewClient = (clientId) => {
-    Router.push(`/clients/view?id=${clientId}`);
+  const handleViewProposal = (clientId) => {
+    Router.push(`/proposals/view?id=${clientId}`);
   };
 
   const columns = [
@@ -51,7 +53,6 @@ const Proposals = () => {
         </div>
       ),
     },
-    { field: 'budgetory', headerName: 'Budgetory', flex: 1 },
     { field: 'project', headerName: 'Project', flex: 1 },
     { field: 'projectType', headerName: 'SPV / SWH', flex: 1 },
     { field: 'capacity', headerName: 'Capacity', flex: 1 },
@@ -61,20 +62,58 @@ const Proposals = () => {
     { field: 'quotedMarginValue', headerName: 'Quoted Margin Value', flex: 1 },
     { field: 'quotedMarginPercentage', headerName: 'Quoted Margin Percentage', flex: 1 },
     { field: 'remark', headerName: 'Remarks', flex: 1 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      renderCell: (params) => (
+        <div>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.5s',
+              paddingRight: '5px'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            onClick={() => handleViewProposal(params.row.id)}
+          >
+            <IconEye />
+          </div>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.5s',
+              paddingRight: '7px'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+          >
+            <IconEdit onClick={() => handleEdit(params.row)} />
+          </div>
+        </div>
+      ),
+      editable: false,
+      sortable: false,
+      filterable: false,
+    }
   ];
 
 
 
   const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false)
   const [allProposals, setAllProposals] = useState([]);
   const [deleteProposalId, setDeleteProposalId] = useState(null);
-  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(null);
 
   const getAllProposals = async () => {
     const res = await fetchProposals()
-
-    console.log(res.data)
-
     const ccc = res.data.map((row) => ({
       ...row,
       id: row._id,
@@ -108,6 +147,30 @@ const Proposals = () => {
   const handleCancel = () => {
     setOpen(false);
   };
+
+  const handleEditCancel = () => {
+    setEditOpen(false)
+  }
+
+  const handleEdit = (rowData) => {
+    setSelectedRowData(rowData)
+    setEditOpen(true)
+  }
+
+  const handleEditProposal = async (id, editedData) => {
+    try {
+      const response = await editProposal(id, editedData)
+
+      toast.success('Proposal Updated successfully', { duration: 3000 });
+
+    } catch {
+      toast.error('Error in updating Proposal', { duration: 3000 });
+    }
+
+    // Close the edit modal
+    setEditOpen(false);
+    getAllProposals();
+  }
 
   const handleDelete = (id) => {
     // setDeleteEnquiryId(id);
@@ -174,6 +237,9 @@ const Proposals = () => {
       </Grid>
       <Sidebar show={open} sx={{ padding: 5 }}>
         <AddProposalForm onSubmit={handleAddProposal} onCancel={handleCancel} />
+      </Sidebar>
+      <Sidebar show={editOpen} sx={{ padding: 5 }}>
+        <EditProposalForm data={selectedRowData} onSubmit={handleEditProposal} onCancel={handleEditCancel} />
       </Sidebar>
     </div>
   );
