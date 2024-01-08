@@ -9,11 +9,12 @@ import Sidebar from 'src/@core/components/sidebar';
 import { Button } from '@mui/material';
 import AddEnquiryForm from './AddEnquiriesForm';
 import EditEnquiryForm from './EditEnquiryForm';
-import { createEnquiry, fetchEnquiries, editEnquiry } from 'src/utility/api';
+import { createEnquiry, fetchEnquiries, editEnquiry, deleteEnquiry } from 'src/utility/api';
 import toast from 'react-hot-toast';
 import Router from 'next/router';
 import { formatTimestamp } from 'src/utility/utility';
-import { IconEdit } from '@tabler/icons-react';
+import { IconEdit, IconEye, IconX } from '@tabler/icons-react';
+import ConfirmationDialog from 'src/utility/confirmation';
 
 const Enquiries = () => {
   const columns = [
@@ -56,17 +57,49 @@ const Enquiries = () => {
       headerName: 'Actions',
       flex: 1,
       renderCell: (params) => (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            cursor: 'pointer',
-            transition: 'transform 0.5s',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-        >
-          <IconEdit onClick={() => handleEdit(params.row)} />
+        <div>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.5s',
+              paddingRight: '5px'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            onClick={() => handleViewEnquiry(params.row.id)}
+          >
+            <IconEye />
+          </div>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.5s',
+              paddingRight: '7px'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+          >
+            <IconEdit onClick={() => handleEdit(params.row)} />
+          </div>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.5s',
+              paddingRight: '7px',
+              color: 'red'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+          >
+            <IconX onClick={() => handleDelete(params.row.id)} />
+          </div>
+
         </div>
       ),
       editable: false,
@@ -81,6 +114,8 @@ const Enquiries = () => {
   const [enquiries, setEnquiries] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [deleteEnquiryId, setDeleteEnquiryId] = useState(null);
 
   const getEnquiries = async () => {
     try {
@@ -94,7 +129,7 @@ const Enquiries = () => {
         offerSubmissionDate: formatTimestamp(row.offerSubmissionDate)
       }));
       setEnquiries(ccc);
-      console.log(ccc);
+      // console.log(ccc);
     } catch {
       console.log("error getting enquiries");
     }
@@ -124,6 +159,30 @@ const Enquiries = () => {
   const handleEdit = (rowData) => {
     setSelectedRowData(rowData);
     setEditModalOpen(true);
+  };
+  const handleViewEnquiry = (id) => {
+    Router.push(`/enquiries/view?id=${id}`);
+  };
+  const handleDelete = (id) => {
+    setDeleteEnquiryId(id);
+    setConfirmationDialogOpen(true);
+  };
+
+  const handleConfirmationDialogClose = () => {
+    setConfirmationDialogOpen(false);
+  };
+
+  const handleConfirmationDialogConfirm = async () => {
+    try {
+      // console.log(deleteEnquiryId)
+      await deleteEnquiry(deleteEnquiryId);
+      toast.success('Enquiry deleted successfully', { duration: 3000 });
+      getEnquiries();
+    } catch {
+      toast.error('Error deleting enquiry', { duration: 3000 });
+    } finally {
+      setConfirmationDialogOpen(false);
+    }
   };
 
   const handleEditModalClose = () => {
@@ -205,6 +264,11 @@ const Enquiries = () => {
       >
         <EditEnquiryForm data={selectedRowData} onSubmit={handleEditSubmit} onCancel={handleEditModalClose} />
       </Sidebar>
+      <ConfirmationDialog
+        open={confirmationDialogOpen}
+        onClose={handleConfirmationDialogClose}
+        onConfirm={handleConfirmationDialogConfirm}
+      />
     </div>
   );
 };

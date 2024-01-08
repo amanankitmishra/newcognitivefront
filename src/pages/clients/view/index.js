@@ -38,6 +38,7 @@ const ViewClient = () => {
     contactPerson: '',
     contactNumber: '',
     contactEmail: '',
+    contactDesignation: ''
   });
 
   const [newVisit, setNewVisit] = useState({
@@ -81,6 +82,8 @@ const ViewClient = () => {
   const handleAddContactPerson = async () => {
 
     try {
+
+      console.log(newContactPerson)
       const response = await addContactPerson(id, newContactPerson);
       if (response.status === 201) {
         // Show success notification
@@ -103,6 +106,7 @@ const ViewClient = () => {
       contactPerson: '',
       contactNumber: '',
       contactEmail: '',
+      contactDesignation: ''
     });
 
     // Close the modal
@@ -138,7 +142,7 @@ const ViewClient = () => {
   }
 
   return (
-    <>
+    <div>
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <Card>
@@ -162,6 +166,8 @@ const ViewClient = () => {
                     <TableCell>Contact Person</TableCell>
                     <TableCell>Contact Number</TableCell>
                     <TableCell>Contact Email</TableCell>
+                    <TableCell>Designation</TableCell>
+
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -170,6 +176,7 @@ const ViewClient = () => {
                       <TableCell>{contactPerson.contactPerson}</TableCell>
                       <TableCell>{contactPerson.contactNumber}</TableCell>
                       <TableCell>{contactPerson.contactEmail}</TableCell>
+                      <TableCell>{contactPerson.contactDesignation}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -199,6 +206,13 @@ const ViewClient = () => {
                     label="Contact Email"
                     value={newContactPerson.contactEmail}
                     onChange={(e) => setNewContactPerson({ ...newContactPerson, contactEmail: e.target.value })}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <TextField
+                    label="Contact Designation"
+                    value={newContactPerson.contactDesignation}
+                    onChange={(e) => setNewContactPerson({ ...newContactPerson, contactDesignation: e.target.value })}
                     fullWidth
                     margin="normal"
                   />
@@ -286,7 +300,7 @@ const ViewClient = () => {
           </Card>
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 };
 

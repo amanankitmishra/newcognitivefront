@@ -67,6 +67,8 @@ const Proposals = () => {
 
   const [open, setOpen] = useState(false);
   const [allProposals, setAllProposals] = useState([]);
+  const [deleteProposalId, setDeleteProposalId] = useState(null);
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
 
   const getAllProposals = async () => {
     const res = await fetchProposals()
@@ -105,6 +107,28 @@ const Proposals = () => {
 
   const handleCancel = () => {
     setOpen(false);
+  };
+
+  const handleDelete = (id) => {
+    // setDeleteEnquiryId(id);
+    setConfirmationDialogOpen(true);
+  };
+
+  const handleConfirmationDialogClose = () => {
+    setConfirmationDialogOpen(false);
+  };
+
+  const handleConfirmationDialogConfirm = async () => {
+    try {
+      // console.log(deleteEnquiryId)
+      await deleteEnquiry(deleteEnquiryId);
+      toast.success('Enquiry deleted successfully', { duration: 3000 });
+      getEnquiries();
+    } catch {
+      toast.error('Error deleting enquiry', { duration: 3000 });
+    } finally {
+      setConfirmationDialogOpen(false);
+    }
   };
 
   return (

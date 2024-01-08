@@ -10,7 +10,6 @@ const AddProposalForm = ({ onSubmit, onCancel }) => {
   const initialFormData = {
     clientId: '',
     status: '',
-    budgetory: '',
     project: '',
     projectType: '',
     capacity: '',
@@ -87,23 +86,12 @@ const AddProposalForm = ({ onSubmit, onCancel }) => {
           >
             <MenuItem key={1} value="LIVE">LIVE</MenuItem>
             <MenuItem key={2} value="LIVE-HOT">LIVE HOT</MenuItem>
+            <MenuItem key={3} value="CONSULTANT">CONSULTANT</MenuItem>
+            <MenuItem key={4} value="CONTRACTOR">CONTRACTOR</MenuItem>
           </TextField>
         </Grid>
 
-        <Grid item xs={6}>
-          <TextField
-            label="Budgetory"
-            name="budgetory"
-            value={formData.budgetory}
-            onChange={handleChange}
-            fullWidth
-            required
-            select
-          >
-            <MenuItem key={1} value="CONSULTANT">CONSULTANT</MenuItem>
-            <MenuItem key={2} value="CONTRACTOR">CONTRACTOR</MenuItem>
-          </TextField>
-        </Grid>
+
 
         <Grid item xs={6}>
           <TextField

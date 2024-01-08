@@ -86,6 +86,16 @@ export const editEnquiry = (id, formData) => {
   return instance.patch(`/enquiries/${id}`, formData)
 }
 
+export const fetchEnquiryById = (id) => {
+  return instance.get(`/enquiries/${id}`)
+}
+
+export const deleteEnquiry = (id) => {
+  return instance.delete(`/enquiries/${id}`)
+}
+
+
+
 
 // BOQ
 
@@ -126,6 +136,10 @@ export const fetchcontractorproposals = () => {
 
 export const fetchconsultantproposals = () => {
   return instance.get("/consultantproposals")
+}
+
+export const fetchProposalById = (id) => {
+  return instance.get(`/proposals/${id}`)
 }
 
 
