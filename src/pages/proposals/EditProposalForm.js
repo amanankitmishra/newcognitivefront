@@ -70,7 +70,6 @@ const EditProposalForm = ({ data, onSubmit, onCancel }) => {
         </Grid>
 
 
-
         <Grid item xs={6}>
           <TextField
             label="Client"

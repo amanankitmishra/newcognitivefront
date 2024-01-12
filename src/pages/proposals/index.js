@@ -10,10 +10,11 @@ import Sidebar from 'src/@core/components/sidebar';
 import { Button } from '@mui/material';
 import AddProposalForm from './AddProposalForm';
 import EditProposalForm from './EditProposalForm';
-import { createProposal, fetchProposals, editProposal } from 'src/utility/api';
+import { createProposal, fetchProposals, editProposal, deleteProposal } from 'src/utility/api';
 import toast from 'react-hot-toast';
 import Router from 'next/router';
-import { IconEye, IconEdit } from '@tabler/icons-react';
+import { IconEye, IconEdit, IconX } from '@tabler/icons-react';
+import ConfirmationDialog from 'src/utility/confirmation';
 
 const Proposals = () => {
 
@@ -95,6 +96,20 @@ const Proposals = () => {
           >
             <IconEdit onClick={() => handleEdit(params.row)} />
           </div>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.5s',
+              paddingRight: '7px',
+              color: 'red'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+          >
+            <IconX onClick={() => handleDelete(params.row.id)} />
+          </div>
         </div>
       ),
       editable: false,
@@ -173,7 +188,7 @@ const Proposals = () => {
   }
 
   const handleDelete = (id) => {
-    // setDeleteEnquiryId(id);
+    setDeleteProposalId(id);
     setConfirmationDialogOpen(true);
   };
 
@@ -183,13 +198,13 @@ const Proposals = () => {
 
   const handleConfirmationDialogConfirm = async () => {
     try {
-      // console.log(deleteEnquiryId)
-      await deleteEnquiry(deleteEnquiryId);
-      toast.success('Enquiry deleted successfully', { duration: 3000 });
-      getEnquiries();
+
+      await deleteProposal(deleteProposalId);
+      toast.success('Proposal deleted successfully', { duration: 3000 });
     } catch {
-      toast.error('Error deleting enquiry', { duration: 3000 });
+      toast.error('Error deleting proposal', { duration: 3000 });
     } finally {
+      getAllProposals();
       setConfirmationDialogOpen(false);
     }
   };
@@ -241,6 +256,11 @@ const Proposals = () => {
       <Sidebar show={editOpen} sx={{ padding: 5 }}>
         <EditProposalForm data={selectedRowData} onSubmit={handleEditProposal} onCancel={handleEditCancel} />
       </Sidebar>
+      <ConfirmationDialog
+        open={confirmationDialogOpen}
+        onClose={handleConfirmationDialogClose}
+        onConfirm={handleConfirmationDialogConfirm}
+      />
     </div>
   );
 };

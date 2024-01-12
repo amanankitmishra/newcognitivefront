@@ -72,6 +72,10 @@ export const editOlead = (id, formData) => {
   return instance.patch(`/oleads/${id}`, formData)
 }
 
+export const fetchOleadById = (id) => {
+  return instance.get(`/oleads/${id}`)
+}
+
 // Enquiries
 
 export const createEnquiry = (formData) => {
@@ -142,8 +146,12 @@ export const fetchProposalById = (id) => {
   return instance.get(`/proposals/${id}`)
 }
 
-export const editProposal = (id) => {
-  return instance.put(`/proposals/${id}`)
+export const editProposal = (id, formData) => {
+  return instance.put(`/proposals/${id}`, formData)
+}
+
+export const deleteProposal = (id) => {
+  return instance.delete(`/proposals/${id}`)
 }
 
 

@@ -156,7 +156,7 @@ const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
             type="date"
             fullWidth
             name="leadDate"
-            value={formData.leadDate}
+            defaultValue={formData.leadDate}
             onChange={handleChange}
             InputLabelProps={{
               shrink: true,

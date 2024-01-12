@@ -7,3 +7,19 @@ export const formatTimestamp = (timestamp) => {
 
   return `${day}/${month}/${year}`;
 };
+
+export const formatDate = (dateObject) => {
+  if (dateObject) {
+    if (dateObject.$date) {
+      // Handle BSON format
+      return new Date(parseInt(dateObject.$date.$numberLong)).toISOString().split('T')[0];
+    } else if (dateObject instanceof Date) {
+      // Handle standard Date object
+      return dateObject.toISOString().split('T')[0];
+    } else if (typeof dateObject === 'number') {
+      // Handle timestamp
+      return new Date(dateObject).toISOString().split('T')[0];
+    }
+  }
+  return '';
+};
