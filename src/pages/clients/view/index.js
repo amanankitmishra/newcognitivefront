@@ -304,4 +304,9 @@ const ViewClient = () => {
   );
 };
 
+ViewClient.acl = {
+  action: 'read',
+  subject: 'client'
+}
+
 export default ViewClient;

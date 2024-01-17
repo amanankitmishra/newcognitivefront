@@ -123,4 +123,9 @@ const ViewEnquiry = () => {
 
 }
 
+ViewEnquiry.acl = {
+  action: 'read',
+  subject: 'enquiry'
+}
+
 export default ViewEnquiry

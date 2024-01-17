@@ -269,4 +269,9 @@ const Proposals = () => {
   );
 };
 
+Proposals.acl = {
+  action: 'read',
+  subject: 'proposal'
+}
+
 export default Proposals;

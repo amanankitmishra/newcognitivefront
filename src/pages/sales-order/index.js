@@ -269,4 +269,9 @@ const SalesOrder = () => {
   );
 };
 
+SalesOrder.acl = {
+  action: 'read',
+  subject: 'salesorder'
+}
+
 export default SalesOrder;

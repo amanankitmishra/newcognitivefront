@@ -647,4 +647,9 @@ const AddSalesOrderForm = ({ onSubmit, onCancel }) => {
   );
 };
 
+AddSalesOrderForm.acl = {
+  action: 'read',
+  subject: 'salesorder'
+}
+
 export default AddSalesOrderForm;

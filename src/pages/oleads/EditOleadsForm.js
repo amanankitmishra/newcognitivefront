@@ -190,4 +190,9 @@ const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
   );
 };
 
+EditOleadsForm.acl = {
+  action: 'read',
+  subject: 'olead'
+}
+
 export default EditOleadsForm;

@@ -153,4 +153,9 @@ const ContractorProposals = () => {
   );
 };
 
+ContractorProposals.acl = {
+  action: 'read',
+  subject: 'proposal'
+}
+
 export default ContractorProposals;

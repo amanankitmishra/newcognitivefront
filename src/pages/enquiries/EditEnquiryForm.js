@@ -221,4 +221,9 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
   );
 };
 
+EditEnquiryForm.acl = {
+  action: 'read',
+  subject: 'enquiry'
+}
+
 export default EditEnquiryForm;

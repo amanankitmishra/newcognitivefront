@@ -252,4 +252,9 @@ const Oleads = () => {
   )
 }
 
+Oleads.acl = {
+  action: 'read',
+  subject: 'olead'
+}
+
 export default Oleads

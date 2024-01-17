@@ -175,4 +175,9 @@ const EditProposalForm = ({ data, onSubmit, onCancel }) => {
   );
 };
 
+EditProposalForm.acl = {
+  action: 'read',
+  subject: 'proposal'
+}
+
 export default EditProposalForm;

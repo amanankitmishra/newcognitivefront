@@ -108,4 +108,9 @@ const UserForm = ({ onSubmit, onCancel }) => {
   );
 };
 
+UserForm.acl = {
+  action: 'read',
+  subject: 'user'
+}
+
 export default UserForm;

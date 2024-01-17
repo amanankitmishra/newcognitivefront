@@ -157,4 +157,9 @@ const ClientsMain = () => {
   );
 };
 
+ClientsMain.acl = {
+  action: 'read',
+  subject: 'client'
+}
+
 export default ClientsMain;

@@ -183,4 +183,9 @@ const ClientForm = ({ onSubmit, onCancel }) => {
   );
 };
 
+ClientForm.acl = {
+  action: 'read',
+  subject: 'client'
+}
+
 export default ClientForm;

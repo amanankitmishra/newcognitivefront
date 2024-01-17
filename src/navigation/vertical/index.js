@@ -4,21 +4,29 @@ const navigation = () => {
       title: 'Home',
       path: '/home',
       icon: 'tabler:smart-home',
+      action: 'read',
+      subject: 'dashboard'
     },
     {
       title: 'Clients',
       path: '/clients',
       icon: 'tabler:briefcase',
+      action: 'read',
+      subject: 'client'
     },
     {
       title: 'Opportunity Leads',
       path: '/oleads',
-      icon: 'tabler:loader-quarter'
+      icon: 'tabler:loader-quarter',
+      action: 'read',
+      subject: 'olead'
     },
     {
       title: 'Enquiries',
       path: '/enquiries',
-      icon: 'tabler:loader-2'
+      icon: 'tabler:loader-2',
+      action: 'read',
+      subject: 'enquiry'
     },
     {
       title: 'Proposals',
@@ -27,44 +35,67 @@ const navigation = () => {
         {
           title: 'All',
           icon: 'tabler:fidget-spinner',
-          path: '/proposals'
+          path: '/proposals',
+          action: 'read',
+          subject: 'proposal'
         },
         {
           title: 'Live',
           icon: 'tabler:fidget-spinner',
-          path: '/proposals/live'
+          path: '/proposals/live',
+          action: 'read',
+          subject: 'proposal'
         },
         {
           title: 'Live Hot',
           icon: 'tabler:fidget-spinner',
-          path: '/proposals/live-hot'
+          path: '/proposals/live-hot',
+          action: 'read',
+          subject: 'proposal'
         },
         {
           title: 'Budgetory Consultants',
           icon: 'tabler:fidget-spinner',
-          path: '/proposals/budgetory-consultants'
+          path: '/proposals/budgetory-consultants',
+          action: 'read',
+          subject: 'proposal'
         },
         {
           title: 'Budgetory Contractors',
           icon: 'tabler:fidget-spinner',
-          path: '/proposals/budgetory-contractors'
+          path: '/proposals/budgetory-contractors',
+          action: 'read',
+          subject: 'proposal'
         },
       ]
     },
     {
       title: 'Visit Calendar',
       path: '/calendar',
-      icon: 'tabler:plane-inflight'
+      icon: 'tabler:plane-inflight',
+      action: 'read',
+      subject: 'calendar'
     },
     {
       title: 'Sales Order',
       path: '/sales-order',
-      icon: 'tabler:report-money'
+      icon: 'tabler:report-money',
+      action: 'read',
+      subject: 'salesorder'
     },
     {
       title: 'BOQ',
       path: '/boq',
-      icon: 'tabler:book-2'
+      icon: 'tabler:book-2',
+      action: 'read',
+      subject: 'boq'
+    },
+    {
+      title: 'Users',
+      path: '/users',
+      icon: 'tabler:book-2',
+      action: 'read',
+      subject: 'user'
     }
   ]
 }

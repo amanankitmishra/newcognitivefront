@@ -154,4 +154,9 @@ const ConsultantProposals = () => {
   );
 };
 
+ConsultantProposals.acl = {
+  action: 'read',
+  subject: 'proposal'
+}
+
 export default ConsultantProposals;

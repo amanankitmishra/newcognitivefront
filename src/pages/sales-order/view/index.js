@@ -60,4 +60,9 @@ const ViewSalesOrder = () => {
   )
 }
 
+ViewSalesOrder.acl = {
+  action: 'read',
+  subject: 'salesorder'
+}
+
 export default ViewSalesOrder

@@ -77,4 +77,9 @@ const MyCalendar = () => {
   );
 };
 
+MyCalendar.acl = {
+  action: 'read',
+  subject: 'calendar'
+}
+
 export default MyCalendar;

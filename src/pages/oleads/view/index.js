@@ -46,4 +46,9 @@ const ViewOlead = () => {
   )
 }
 
+ViewOlead.acl = {
+  action: 'read',
+  subject: 'olead'
+}
+
 export default ViewOlead

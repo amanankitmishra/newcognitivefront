@@ -154,4 +154,9 @@ const LiveProposals = () => {
   );
 };
 
+LiveProposals.acl = {
+  action: 'read',
+  subject: 'proposal'
+}
+
 export default LiveProposals;

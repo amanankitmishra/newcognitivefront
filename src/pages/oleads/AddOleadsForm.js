@@ -178,4 +178,9 @@ const AddOleadsForm = ({ onSubmit, onCancel }) => {
   );
 };
 
+AddOleadsForm.acl = {
+  action: 'read',
+  subject: 'olead'
+}
+
 export default AddOleadsForm;

@@ -273,4 +273,9 @@ const Enquiries = () => {
   );
 };
 
+Enquiries.acl = {
+  action: 'read',
+  subject: 'enquiry'
+}
+
 export default Enquiries;

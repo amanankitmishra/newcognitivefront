@@ -161,4 +161,9 @@ const AddProposalForm = ({ onSubmit, onCancel }) => {
   );
 };
 
+AddProposalForm.acl = {
+  action: 'read',
+  subject: 'proposal'
+}
+
 export default AddProposalForm;
