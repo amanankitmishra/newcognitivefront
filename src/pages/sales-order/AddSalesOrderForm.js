@@ -47,10 +47,16 @@ const AddSalesOrderForm = ({ onSubmit, onCancel }) => {
     paymentWithGST: '',
     paymentStage: '',
     documentType: '',
-    documentValueWOGST: '',
-    documentValueWithGST: '',
+    documentValueWOGST: 0,
+    documentValueWithGST: 0,
     documentNo: '',
     documentDated: '',
+    creditAmount: 0,
+    dueAmountWithGST: 0,
+    pendingToInvoiceWOGST: 0,
+    pendingToInvoiceWithGST: 0,
+    billingDonePercentage: 0,
+    billingPendingPercentage: 0
 
   }
 
@@ -84,7 +90,7 @@ const AddSalesOrderForm = ({ onSubmit, onCancel }) => {
 
   const calculateFields = () => {
     setFormData((prevData) => {
-      const { totalWOGST, firstApplicableGST, secondApplicableGST } = prevData;
+      const { totalWOGST, firstApplicableGST, secondApplicableGST, creditAmount, documentValueWithGST, documentValueWOGST } = prevData;
 
       const firstValueForGSTPercent = totalWOGST * 0.7;
       const secondValueForGSTPercent = totalWOGST * 0.3;
@@ -92,6 +98,11 @@ const AddSalesOrderForm = ({ onSubmit, onCancel }) => {
       const secondGSTValue = secondValueForGSTPercent * secondApplicableGST / 100;
       const firstWithGST = firstValueForGSTPercent + firstGSTValue;
       const secondWithGST = secondValueForGSTPercent + secondGSTValue;
+      const dueAmountWithGST = documentValueWithGST - creditAmount;
+      const pendingToInvoiceWOGST = firstValueForGSTPercent - documentValueWOGST;
+      const pendingToInvoiceWithGST = firstWithGST - documentValueWithGST;
+      const billingDonePercentage = documentValueWOGST / totalWOGST * 100
+      const billingPendingPercentage = 100 - billingDonePercentage
 
       return {
         ...prevData,
@@ -100,7 +111,12 @@ const AddSalesOrderForm = ({ onSubmit, onCancel }) => {
         firstGSTValue,
         secondGSTValue,
         firstWithGST,
-        secondWithGST
+        secondWithGST,
+        dueAmountWithGST,
+        pendingToInvoiceWOGST,
+        pendingToInvoiceWithGST,
+        billingDonePercentage,
+        billingPendingPercentage
       };
     });
   };
@@ -418,6 +434,135 @@ const AddSalesOrderForm = ({ onSubmit, onCancel }) => {
                 Document
               </Typography>
             </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label="Type"
+                select
+                fullWidth
+                name="documentType"
+                value={formData.documentType}
+                onChange={handleChange}
+                required
+              >
+                <MenuItem key={1} value={"PI"}>
+                  PI
+                </MenuItem>
+                <MenuItem key={2} value={"TAX INVOICE"}>
+                  TAX INVOICE
+                </MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label="Value Without GST"
+                fullWidth
+                name="documentValueWOGST"
+                value={formData.documentValueWOGST}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label="Value With GST"
+                fullWidth
+                name="documentValueWithGST"
+                value={formData.documentValueWithGST}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Document No."
+                fullWidth
+                name="documentNo"
+                value={formData.documentNo}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Dated"
+                fullWidth
+                name="documentDated"
+                type='date'
+                value={formData.documentDated}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={4}>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                label="Credit Amount"
+                fullWidth
+                name='creditAmount'
+                value={formData.creditAmount}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Due Amount With GST"
+                fullWidth
+                name='dueAmountWithGST'
+                value={formData.dueAmountWithGST}
+                onChange={handleChange}
+                disabled
+              />
+            </Grid>
+            <Grid xs={12} p={2}>
+              <Typography variant='body1'>
+                Pending To Invoice
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Without GST"
+                fullWidth
+                name='pendingToInvoiceWOGST'
+                value={formData.pendingToInvoiceWOGST}
+                onChange={handleChange}
+                disabled
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="With GST"
+                fullWidth
+                name='pendingToInvoiceWithGST'
+                value={formData.pendingToInvoiceWithGST}
+                onChange={handleChange}
+                disabled
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="% Billing Done"
+                fullWidth
+                name='billingDonePercentage'
+                value={formData.billingDonePercentage}
+                onChange={handleChange}
+                disabled
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="% Billing Pending"
+                fullWidth
+                name='billingPendingPercentage'
+                value={formData.billingPendingPercentage}
+                onChange={handleChange}
+                disabled
+              />
+            </Grid>
+
           </Grid>
         </Grid>
 
