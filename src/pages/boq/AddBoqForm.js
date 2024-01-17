@@ -113,4 +113,9 @@ const AddBOQForm = ({ onSubmit, onCancel }) => {
   );
 };
 
+AddBOQForm.acl = {
+  action: 'read',
+  subject: 'boq'
+}
+
 export default AddBOQForm;

@@ -167,5 +167,9 @@ const BOQ = () => {
     </div>
   );
 };
+BOQ.acl = {
+  action: 'read',
+  subject: 'boq'
+}
 
 export default BOQ;

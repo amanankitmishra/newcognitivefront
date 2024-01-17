@@ -140,5 +140,9 @@ const EditBoqForm = ({ data, onSubmit, onCancel }) => {
     </form>
   );
 };
+EditBoqForm.acl = {
+  action: 'read',
+  subject: 'boq'
+}
 
 export default EditBoqForm;

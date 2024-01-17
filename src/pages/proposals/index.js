@@ -1,4 +1,4 @@
-// LiveProposals.jsx
+
 import React, { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -20,6 +20,10 @@ const Proposals = () => {
 
   const handleViewProposal = (clientId) => {
     Router.push(`/proposals/view?id=${clientId}`);
+  };
+
+  const handleViewClient = (clientId) => {
+    Router.push(`/clients/view?id=${clientId}`);
   };
 
   const columns = [

@@ -154,6 +154,38 @@ export const deleteProposal = (id) => {
   return instance.delete(`/proposals/${id}`)
 }
 
+//Sales Order
+
+export const fetchSalesOrder = () => {
+  return instance.get('/salesOrders')
+}
+
+export const createSalesOrder = (formData) => {
+  return instance.post('salesOrders', formData)
+}
+
+export const fetchSalesOrderById = (id) => {
+  return instance.get(`/salesOrders/${id}`)
+}
+
+export const editSalesOrder = (id, formData) => {
+  return instance.patch(`/salesOrders/${id}`, formData)
+}
+
+export const deleteSalesOrder = (id) => {
+  return instance.delete(`/salesOrders/${id}`)
+}
+
+
+// Users
+
+export const fetchAllUsers = () => {
+  return instance.get('/users')
+}
+
+export const createUser = (formData) => {
+  return instance.post('/users', formData)
+}
 
 
 export default instance

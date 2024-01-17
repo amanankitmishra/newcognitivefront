@@ -1,16 +1,12 @@
-// AddSalesOrderForm.jsx
 import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { Typography, MenuItem } from '@mui/material';
+import { Typography } from '@mui/material';
+import { MenuItem } from '@mui/material';
 import { getClientList } from 'src/utility/api';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DatePicker from '@mui/lab/DatePicker';
 
-const AddSalesOrderForm = ({ onSubmit, onCancel }) => {
-
+const EditSalesOrderForm = ({ data, onSubmit, onCancel }) => {
   const initialFormData = {
     clientId: '',
     salesOrderNo: '',
@@ -56,22 +52,64 @@ const AddSalesOrderForm = ({ onSubmit, onCancel }) => {
   }
 
   const [formData, setFormData] = useState(initialFormData);
-
   const [clientList, setClientList] = useState([])
 
   const fetchClientList = async () => {
-    try {
-      const response = await getClientList();
-      setClientList(response.data);
-    } catch (error) {
-      console.log('Error fetching client list:', error);
-    }
-  };
+    const res = await getClientList()
+    setClientList(res.data)
+  }
 
   useEffect(() => {
-    fetchClientList();
-    calculateFields();
-  }, []);
+    fetchClientList()
+    if (data) {
+      setFormData({
+
+        clientId: data.clientId || '',
+        salesOrderNo: data.salesOrderNo || '',
+        project: data.project || '',
+        siteLocation: data.siteLocation || '',
+        orderStatus: data.orderStatus || '',
+        poReceived: data.poReceived || '',
+        poReceivingDate: data.poReceivingDate || '',
+        fy: data.fy || '',
+        panNo: data.panNo || '',
+        gstNo: data.gstNo || '',
+        poNo: data.poNo || '',
+        poDate: data.poDate || '',
+        spvSwh: data.spvSwh || '',
+        capacity: data.capacity || '',
+        uom: data.uom || '',
+        remark: data.remark || '',
+        totalWOGST: data.totalWOGST || 0,
+        firstValueForGSTPercent: data.firstValueForGSTPercent || 0,
+        firstApplicableGST: data.firstApplicableGST || 18,
+        firstGSTValue: data.firstGSTValue || 0,
+        firstWithGST: data.firstWithGST || 0,
+        secondValueForGSTPercent: data.secondValueForGSTPercent || 0,
+        secondApplicableGST: data.secondApplicableGST || 12,
+        secondGSTValue: data.secondGSTValue || 0,
+        secondWithGST: data.secondWithGST || 0,
+        paymentPercentage: data.paymentPercentage || '',
+        paymentWOGST: data.paymentWOGST || '',
+        paymentWithGST: data.paymentWithGST || '',
+        paymentStage: data.paymentStage || '',
+        documentType: data.documentType || '',
+        documentValueWOGST: data.documentValueWOGST || 0,
+        documentValueWithGST: data.documentValueWithGST || 0,
+        documentNo: data.documentNo || '',
+        documentDated: data.documentDated || '',
+        creditAmount: data.creditAmount || 0,
+        dueAmountWithGST: data.dueAmountWithGST || 0,
+        pendingToInvoiceWOGST: data.pendingToInvoiceWOGST || 0,
+        pendingToInvoiceWithGST: data.pendingToInvoiceWithGST || 0,
+        billingDonePercentage: data.billingDonePercentage || 0,
+        billingPendingPercentage: data.billingPendingPercentage || 0
+
+
+      })
+    }
+    calculateFields()
+  }, [data])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,7 +117,7 @@ const AddSalesOrderForm = ({ onSubmit, onCancel }) => {
       ...prevData,
       [name]: value,
     }));
-    calculateFields();
+    calculateFields()
   };
 
   const calculateFields = () => {
@@ -117,8 +155,7 @@ const AddSalesOrderForm = ({ onSubmit, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
-    setFormData(initialFormData);
+    onSubmit(data._id, formData);
   };
 
   return (
@@ -647,4 +684,4 @@ const AddSalesOrderForm = ({ onSubmit, onCancel }) => {
   );
 };
 
-export default AddSalesOrderForm;
+export default EditSalesOrderForm;
