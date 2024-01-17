@@ -1,9 +1,8 @@
 import axios from "axios"
 
-const BASE_URL = "http://localhost:5000";
+// const BASE_URL = "http://localhost:5000";
 
-// const BASE_URL = "https://invoice-backend-nf7r.onrender.com";
-// const BASE_URL = "http://backend.nextbill.io"
+const BASE_URL = "https://sea-lion-app-p56d8.ondigitalocean.app";
 
 
 const instance = axios.create({
