@@ -186,5 +186,11 @@ export const createUser = (formData) => {
   return instance.post('/users', formData)
 }
 
+// Analytics
+
+export const fetchAllAnalytics = () => {
+  return instance.get('/allAnalytics')
+}
+
 
 export default instance
