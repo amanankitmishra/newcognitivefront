@@ -23,6 +23,7 @@ const initialFormData = {
       contactPerson: '',
       contactNumber: '',
       contactEmail: '',
+      contactDesignation: '',
     },
   ],
 };
@@ -59,6 +60,7 @@ const ClientForm = ({ onSubmit, onCancel }) => {
           contactPerson: '',
           contactNumber: '',
           contactEmail: '',
+          contactDesignation: '',
         },
       ],
     }));
@@ -105,6 +107,7 @@ const ClientForm = ({ onSubmit, onCancel }) => {
             >
               <MenuItem value="contractor">Contractor</MenuItem>
               <MenuItem value="consultant">Consultant</MenuItem>
+              <MenuItem value="endCustomer">End Customer</MenuItem>
               <MenuItem value="others">Other</MenuItem>
             </Select>
           </FormControl>
@@ -123,7 +126,7 @@ const ClientForm = ({ onSubmit, onCancel }) => {
         <Grid item xs={12}>
           {formData.contactPersons.map((contactPerson, index) => (
             <Grid container spacing={2} key={index} sx={{ pb: 2 }}>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   label="Contact Person"
                   fullWidth
@@ -142,7 +145,7 @@ const ClientForm = ({ onSubmit, onCancel }) => {
                   }}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   label="Contact Number"
                   fullWidth
@@ -150,12 +153,20 @@ const ClientForm = ({ onSubmit, onCancel }) => {
                   onChange={(e) => handleContactPersonChange(index, 'contactNumber', e.target.value)}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   label="Contact Email"
                   fullWidth
                   value={contactPerson.contactEmail}
                   onChange={(e) => handleContactPersonChange(index, 'contactEmail', e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  label="Contact Designation"
+                  fullWidth
+                  value={contactPerson.contactDesignation}
+                  onChange={(e) => handleContactPersonChange(index, 'contactDesignation', e.target.value)}
                 />
               </Grid>
             </Grid>

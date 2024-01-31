@@ -1,8 +1,8 @@
 import axios from "axios"
 
-// const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://localhost:5000";
 
-const BASE_URL = "https://sea-lion-app-p56d8.ondigitalocean.app";
+// const BASE_URL = "https://sea-lion-app-p56d8.ondigitalocean.app";
 
 
 const instance = axios.create({
@@ -40,6 +40,10 @@ export const fetchClientById = (id) => {
 
 export const addContactPerson = (id, formData) => {
   return instance.post(`/clients/addContactPerson/${id}`, formData)
+}
+
+export const editContactPerson = (clientId, contactPersonId, formData) => {
+  return instance.put(`/clients/editContactPerson/${clientId}/contactpersons/${contactPersonId}`, formData)
 }
 
 export const addVisit = (id, formData) => {

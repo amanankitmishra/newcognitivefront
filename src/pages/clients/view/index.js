@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
+
 import {
   Typography,
   Grid,
@@ -27,6 +28,7 @@ import Router from 'next/router';
 import { IconUserPlus, IconCalendarPlus } from '@tabler/icons-react'; // Assuming you have a calendar icon
 import { fetchClientById, addContactPerson, addVisit } from 'src/utility/api';
 import { formatTimestamp } from 'src/utility/utility';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 const ViewClient = () => {
   const { id } = Router.query;
@@ -49,10 +51,20 @@ const ViewClient = () => {
 
   const fetchClient = async () => {
     try {
-      console.log(id)
       const response = await fetchClientById(id);
 
-      setClient(response.data);
+      // Rename _id to id for each contact person
+      const updatedContactPersons = response.data.contactPersons.map((cp) => ({
+        ...cp,
+        id: cp._id,
+      }));
+      // Update the client object with the renamed contact persons
+      const updatedClient = {
+        ...response.data,
+        contactPersons: updatedContactPersons,
+      };
+      setClient(updatedClient);
+      console.log(updatedClient)
     } catch (error) {
       console.error('Error fetching client data:', error);
     }
@@ -160,27 +172,29 @@ const ViewClient = () => {
                 {client.officeAddress}
               </Typography>
               <Typography variant='h6' sx={{ fontSize: '16px', textTransform: 'uppercase', pt: 4 }}>Contact Persons</Typography>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Contact Person</TableCell>
-                    <TableCell>Contact Number</TableCell>
-                    <TableCell>Contact Email</TableCell>
-                    <TableCell>Designation</TableCell>
-
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {client.contactPersons.map((contactPerson, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{contactPerson.contactPerson}</TableCell>
-                      <TableCell>{contactPerson.contactNumber}</TableCell>
-                      <TableCell>{contactPerson.contactEmail}</TableCell>
-                      <TableCell>{contactPerson.contactDesignation}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <DataGrid
+                rows={client.contactPersons}
+                columns={[
+                  { field: 'contactPerson', headerName: 'Contact Person', flex: 1 },
+                  { field: 'contactNumber', headerName: 'Contact Number', flex: 1 },
+                  { field: 'contactEmail', headerName: 'Contact Email', flex: 1 },
+                  { field: 'contactDesignation', headerName: 'Designation', flex: 1 },
+                ]}
+                initialState={{
+                  columns: {
+                    columnVisibilityModel: {
+                      id: false,
+                    },
+                  },
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 5,
+                    }
+                  }
+                }}
+                pageSizeOptions={[5, 10, 20]}
+                slots={{ toolbar: GridToolbar }}
+              />
               <Button variant="contained" color="primary" onClick={handleOpenModal} sx={{ mt: 2 }}>
                 <IconUserPlus />
               </Button>
