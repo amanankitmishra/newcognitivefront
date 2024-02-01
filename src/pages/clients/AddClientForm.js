@@ -17,6 +17,8 @@ import { IconPlus, IconMinus } from '@tabler/icons-react';
 const initialFormData = {
   clientName: '',
   officeAddress: '',
+  city: '',
+  state: '',
   nature: '',
   contactPersons: [
     {
@@ -118,6 +120,22 @@ const ClientForm = ({ onSubmit, onCancel }) => {
             fullWidth
             value={formData.officeAddress}
             onChange={(e) => handleInputChange('officeAddress', e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            label="City"
+            fullWidth
+            value={formData.city}
+            onChange={(e) => handleInputChange('city', e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            label="State"
+            fullWidth
+            value={formData.state}
+            onChange={(e) => handleInputChange('state', e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>

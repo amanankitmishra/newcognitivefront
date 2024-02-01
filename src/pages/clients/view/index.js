@@ -6,6 +6,7 @@ import {
   Grid,
   Card,
   CardContent,
+  TableContainer,
   Table,
   TableBody,
   TableHead,
@@ -17,6 +18,7 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Paper
 } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
@@ -26,15 +28,22 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import Router from 'next/router';
 import { IconUserPlus, IconCalendarPlus } from '@tabler/icons-react'; // Assuming you have a calendar icon
-import { fetchClientById, addContactPerson, addVisit } from 'src/utility/api';
+import { fetchClientById, addContactPerson, addVisit, deleteContactPerson, editContactPersons } from 'src/utility/api';
 import { formatTimestamp } from 'src/utility/utility';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { IconX, IconEdit } from '@tabler/icons-react';
+import ConfirmationDialog from 'src/utility/confirmation';
+
 
 const ViewClient = () => {
   const { id } = Router.query;
   const [client, setClient] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [contactPersons, setContactPersons] = useState([]);
   const [openVisitModal, setOpenVisitModal] = useState(false);
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [deleteContactPersonId, setDeleteContactPersonId] = useState(null);
+  const [editContactPersonId, setEditContactPersonId] = useState(null);
+  const [openEditModal, setOpenEditModal] = useState(false);
 
   const [newContactPerson, setNewContactPerson] = useState({
     contactPerson: '',
@@ -42,6 +51,8 @@ const ViewClient = () => {
     contactEmail: '',
     contactDesignation: ''
   });
+
+  const [editContactPerson, setEditContactPerson] = useState({})
 
   const [newVisit, setNewVisit] = useState({
     visitDate: '',
@@ -58,13 +69,16 @@ const ViewClient = () => {
         ...cp,
         id: cp._id,
       }));
+
       // Update the client object with the renamed contact persons
       const updatedClient = {
         ...response.data,
         contactPersons: updatedContactPersons,
       };
+
+      // Update both client and contactPersons states
       setClient(updatedClient);
-      console.log(updatedClient)
+      setContactPersons(updatedClient.contactPersons);
     } catch (error) {
       console.error('Error fetching client data:', error);
     }
@@ -83,6 +97,35 @@ const ViewClient = () => {
     setOpenModal(false);
   };
 
+  const handleCloseEditModal = () => {
+    setOpenEditModal(false);
+  }
+
+  const handleEditContactPerson = (contact) => {
+    setEditContactPersonId(contact._id)
+    const toBeEdited = {
+      contactPerson: contact.contactPerson,
+      contactNumber: contact.contactNumber,
+      contactEmail: contact.contactEmail,
+      contactDesignation: contact.contactDesignation
+    }
+    setEditContactPerson(toBeEdited)
+
+    setOpenEditModal(true);
+  }
+
+  const handleEditSubmit = async () => {
+    try {
+      const response = await editContactPersons(id, editContactPersonId, editContactPerson)
+      toast.success('Contact Person Edited', { duration: 3000 });
+      fetchClient();
+    } catch (e) {
+      console.log(e)
+      toast.error('Error Editing Contact Person', { duration: 3000 });
+    }
+    setOpenEditModal(false)
+  }
+
   const handleOpenVisit = () => {
     setOpenVisitModal(true);
   }
@@ -95,7 +138,6 @@ const ViewClient = () => {
 
     try {
 
-      console.log(newContactPerson)
       const response = await addContactPerson(id, newContactPerson);
       if (response.status === 201) {
         // Show success notification
@@ -123,6 +165,28 @@ const ViewClient = () => {
 
     // Close the modal
     handleCloseModal();
+  };
+
+  const handleDeleteContactPerson = (id) => {
+    setDeleteContactPersonId(id);
+    setConfirmationDialogOpen(true);
+
+  }
+
+  const handleConfirmationDialogClose = () => {
+    setConfirmationDialogOpen(false);
+  };
+
+  const handleConfirmationDialogConfirm = async () => {
+    try {
+      await deleteContactPerson(id, deleteContactPersonId);
+      toast.success('Contact Person deleted successfully', { duration: 3000 });
+      fetchClient()
+    } catch {
+      toast.error('Error deleting Contact Person', { duration: 3000 });
+    } finally {
+      setConfirmationDialogOpen(false);
+    }
   };
 
   const handleAddVisit = async () => {
@@ -156,7 +220,7 @@ const ViewClient = () => {
   return (
     <div>
       <Grid container spacing={2}>
-        <Grid item xs={6}>
+        <Grid item xs={8}>
           <Card>
             <CardContent>
               <Typography variant='h4'>
@@ -171,33 +235,12 @@ const ViewClient = () => {
               <Typography variant='body1' sx={{ fontSize: '14px' }}>
                 {client.officeAddress}
               </Typography>
-              <Typography variant='h6' sx={{ fontSize: '16px', textTransform: 'uppercase', pt: 4 }}>Contact Persons</Typography>
-              <DataGrid
-                rows={client.contactPersons}
-                columns={[
-                  { field: 'contactPerson', headerName: 'Contact Person', flex: 1 },
-                  { field: 'contactNumber', headerName: 'Contact Number', flex: 1 },
-                  { field: 'contactEmail', headerName: 'Contact Email', flex: 1 },
-                  { field: 'contactDesignation', headerName: 'Designation', flex: 1 },
-                ]}
-                initialState={{
-                  columns: {
-                    columnVisibilityModel: {
-                      id: false,
-                    },
-                  },
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 5,
-                    }
-                  }
-                }}
-                pageSizeOptions={[5, 10, 20]}
-                slots={{ toolbar: GridToolbar }}
-              />
-              <Button variant="contained" color="primary" onClick={handleOpenModal} sx={{ mt: 2 }}>
-                <IconUserPlus />
-              </Button>
+              <Typography variant='body1' sx={{ fontSize: '14px' }}>
+                City : {client.city}
+              </Typography>
+              <Typography variant='body1' sx={{ fontSize: '14px' }}>
+                State : {client.state}
+              </Typography>
               <Dialog open={openModal} onClose={handleCloseModal}>
                 <DialogTitle>Add New Contact Person</DialogTitle>
                 <DialogContent>
@@ -242,8 +285,73 @@ const ViewClient = () => {
               </Dialog>
             </CardContent>
           </Card>
+          <Card sx={{ marginTop: "10px" }}>
+            <CardContent>
+              <Typography variant='h5'>
+                Contact Persons
+              </Typography>
+              <Button variant="contained" color="primary" onClick={handleOpenModal} sx={{ padding: '5px', margin: '5px' }}>
+                <IconUserPlus size={20} />
+              </Button>
+
+              {/* Responsive Table */}
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Contact Person</TableCell>
+                      <TableCell>Contact Number</TableCell>
+                      <TableCell>Contact Email</TableCell>
+                      <TableCell>Designation</TableCell>
+                      <TableCell>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {contactPersons.map((contact) => (
+                      <TableRow key={contact.id}>
+                        <TableCell>{contact.contactPerson}</TableCell>
+                        <TableCell>{contact.contactNumber}</TableCell>
+                        <TableCell>{contact.contactEmail}</TableCell>
+                        <TableCell>{contact.contactDesignation}</TableCell>
+                        <TableCell>
+                          <div style={{ display: 'inline-flex' }}>
+                            <div style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              cursor: 'pointer',
+                              transition: 'transform 0.5s',
+                              marginRight: '5px',
+                              color: '#176483'
+                            }}
+                              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+                              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                              onClick={() => handleEditContactPerson(contact)}>
+                              <IconEdit />
+                            </div>
+                            <div style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              cursor: 'pointer',
+                              transition: 'transform 0.5s',
+                              color: 'red'
+                            }}
+                              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+                              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                              onClick={() => handleDeleteContactPerson(contact._id)}>
+                              <IconX />
+                            </div>
+
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+          </Card>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Card>
             <CardContent>
               <Typography variant='h6' sx={{ fontSize: '16px', textTransform: 'uppercase', pt: 4 }}>
@@ -314,7 +422,54 @@ const ViewClient = () => {
           </Card>
         </Grid>
       </Grid>
-    </div>
+      <ConfirmationDialog
+        open={confirmationDialogOpen}
+        onClose={handleConfirmationDialogClose}
+        onConfirm={handleConfirmationDialogConfirm}
+      />
+      <Dialog open={openEditModal} onClose={handleCloseEditModal}>
+        <DialogTitle>Edit Contact Person</DialogTitle>
+        <DialogContent>
+          {/* Form to add new contact person */}
+          <TextField
+            label="Contact Person"
+            value={editContactPerson.contactPerson}
+            onChange={(e) => setEditContactPerson({ ...editContactPerson, contactPerson: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Contact Number"
+            value={editContactPerson.contactNumber}
+            onChange={(e) => setEditContactPerson({ ...editContactPerson, contactNumber: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Contact Email"
+            value={editContactPerson.contactEmail}
+            onChange={(e) => setEditContactPerson({ ...editContactPerson, contactEmail: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Contact Designation"
+            value={editContactPerson.contactDesignation}
+            onChange={(e) => setEditContactPerson({ ...editContactPerson, contactDesignation: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditModal} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleEditSubmit} color="primary">
+            Edit Contact Person
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div >
   );
 };
 

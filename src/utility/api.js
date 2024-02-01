@@ -42,8 +42,12 @@ export const addContactPerson = (id, formData) => {
   return instance.post(`/clients/addContactPerson/${id}`, formData)
 }
 
-export const editContactPerson = (clientId, contactPersonId, formData) => {
-  return instance.put(`/clients/editContactPerson/${clientId}/contactpersons/${contactPersonId}`, formData)
+export const editContactPersons = (clientId, contactPersonId, formData) => {
+  return instance.patch(`/clients/editContactPerson/${clientId}/contactPersons/${contactPersonId}`, formData)
+}
+
+export const deleteContactPerson = (clientId, contactPersonId) => {
+  return instance.delete(`/clients/deleteContactPerson/${clientId}/contactPersons/${contactPersonId}`)
 }
 
 export const addVisit = (id, formData) => {
@@ -56,6 +60,10 @@ export const getClientList = () => {
 
 export const fetchAllVisits = () => {
   return instance.get("/visits");
+}
+
+export const deleteClient = (id) => {
+  return instance.delete(`/clients/${id}`)
 }
 
 
@@ -194,6 +202,12 @@ export const createUser = (formData) => {
 
 export const fetchAllAnalytics = () => {
   return instance.get('/allAnalytics')
+}
+
+// Meetings
+
+export const fetchMeetings = () => {
+  return instance.get('/meetings')
 }
 
 

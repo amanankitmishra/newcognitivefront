@@ -4,17 +4,21 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Sidebar from 'src/@core/components/sidebar';
 import ClientForm from './AddClientForm';
 import { Card, CardHeader, CardContent } from '@mui/material';
-import { IconDotsVertical, IconEye } from '@tabler/icons-react';
+import { IconDotsVertical, IconEye, IconX } from '@tabler/icons-react';
 import Link from 'next/link';
 import Router from 'next/router';
-import { fetchClients, createClient } from 'src/utility/api';
+import { fetchClients, createClient, deleteClient } from 'src/utility/api';
 import { formatTimestamp } from 'src/utility/utility';
 import toast from 'react-hot-toast';
+import ConfirmationDialog from 'src/utility/confirmation';
+
 
 
 const ClientsMain = () => {
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState([]);
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [deleteClientId, setDeleteClientId] = useState(null);
 
   const fetchClientsData = async () => {
     try {
@@ -34,9 +38,6 @@ const ClientsMain = () => {
   useEffect(() => {
     fetchClientsData();
   }, []);
-
-
-
 
   const toggleSidebar = () => {
     setOpen(!open);
@@ -74,6 +75,28 @@ const ClientsMain = () => {
     Router.push(`/clients/view?id=${clientId}`);
   };
 
+  const handleDelete = (id) => {
+    setDeleteClientId(id);
+    setConfirmationDialogOpen(true);
+  };
+
+  const handleConfirmationDialogClose = () => {
+    setConfirmationDialogOpen(false);
+  };
+
+  const handleConfirmationDialogConfirm = async () => {
+    try {
+      // console.log(deleteEnquiryId)
+      await deleteClient(deleteClientId);
+      toast.success('Client deleted successfully', { duration: 3000 });
+      fetchClientsData();
+    } catch {
+      toast.error('Error deleting client', { duration: 3000 });
+    } finally {
+      setConfirmationDialogOpen(false);
+    }
+  };
+
   const columns = [
     { field: 'id', headerName: 'ID', flex: 1 },
     { field: 'clientName', headerName: 'Client Name', flex: 1 },
@@ -84,23 +107,44 @@ const ClientsMain = () => {
 
     },
     { field: 'nature', headerName: 'Nature Of Client', flex: 1 },
+    { field: 'city', headerName: 'City', flex: 1 },
+    { field: 'state', headerName: 'State', flex: 1 },
     {
       field: 'actions',
       headerName: 'Actions',
       flex: 1,
       renderCell: (params) => (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            cursor: 'pointer',
-            transition: 'transform 0.5s',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-          onClick={() => handleViewClient(params.row.id)}
-        >
-          <IconEye />
+        <div style={{
+          display: 'inline-flex'
+        }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.5s',
+              paddingRight: '5px'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            onClick={() => handleViewClient(params.row.id)}
+          >
+            <IconEye />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.5s',
+              color: 'red',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            onClick={() => handleDelete(params.row.id)}
+          >
+            <IconX />
+          </div>
         </div>
       ),
       editable: false,
@@ -153,6 +197,11 @@ const ClientsMain = () => {
         <ClientForm onSubmit={handleAddClient}
           onCancel={handleCancel} />
       </Sidebar>
+      <ConfirmationDialog
+        open={confirmationDialogOpen}
+        onClose={handleConfirmationDialogClose}
+        onConfirm={handleConfirmationDialogConfirm}
+      />
     </div>
   );
 };
