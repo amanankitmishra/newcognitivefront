@@ -17,14 +17,18 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'proposal')
     can(['read'], 'salesorder')
     can(['read'], 'boq')
+    can(['read'], 'dashboard-calendar')
   } else if (role === 'accounts') {
     can(['read'], 'salesorder')
+    can(['read'], 'dashboard-calendar')
   } else if (role === 'tendering') {
     can(['read'], 'salesorder')
     can(['read'], 'client')
     can(['read'], 'olead')
+    can(['read'], 'dashboard-calendar')
   } else {
     can(['read', 'create', 'update', 'delete'], subject)
+    can(['read'], 'dashboard-calendar')
   }
 
   return rules

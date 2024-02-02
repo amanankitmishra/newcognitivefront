@@ -210,5 +210,8 @@ export const fetchMeetings = () => {
   return instance.get('/meetings')
 }
 
+export const createMeeting = (formData) => {
+  return instance.post('/meetings', formData)
+}
 
 export default instance
