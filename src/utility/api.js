@@ -210,8 +210,20 @@ export const fetchMeetings = () => {
   return instance.get('/meetings')
 }
 
+export const fetchTodaysMeetings = () => {
+  return instance.get('/todaysMeetings')
+}
+
 export const createMeeting = (formData) => {
   return instance.post('/meetings', formData)
+}
+
+export const markMeetingComplete = (id) => {
+  return instance.put(`/markComplete/${id}`)
+}
+
+export const deleteMeetingById = (id) => {
+  return instance.delete(`/meetings/${id}`)
 }
 
 export default instance

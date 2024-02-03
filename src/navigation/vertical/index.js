@@ -70,13 +70,6 @@ const navigation = () => {
       ]
     },
     {
-      title: 'Visit Calendar',
-      path: '/calendar',
-      icon: 'tabler:plane-inflight',
-      action: 'read',
-      subject: 'calendar'
-    },
-    {
       title: 'Sales Order',
       path: '/sales-order',
       icon: 'tabler:report-money',
@@ -96,7 +89,21 @@ const navigation = () => {
       icon: 'tabler:book-2',
       action: 'read',
       subject: 'user'
-    }
+    },
+    {
+      title: 'Meetings',
+      path: '/meetings',
+      icon: 'tabler:calendar-month',
+      action: 'read',
+      subject: 'meetings'
+    },
+    {
+      title: 'Visit Calendar',
+      path: '/calendar',
+      icon: 'tabler:plane-inflight',
+      action: 'read',
+      subject: 'calendar'
+    },
   ]
 }
 

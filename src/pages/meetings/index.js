@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchMeetings, fetchClients, createMeeting } from 'src/utility/api';
+import { fetchMeetings, fetchClients, createMeeting, markMeetingComplete, deleteMeetingById } from 'src/utility/api';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import {
   Card,
@@ -14,12 +14,12 @@ import {
   MenuItem,
   Grid
 } from '@mui/material';
-import { IconCalendarPlus } from '@tabler/icons-react';
+import { IconCalendarPlus, IconChecks, IconX } from '@tabler/icons-react';
 import toast from 'react-hot-toast';
 import { formatTimestamp } from 'src/utility/utility';
 
 
-const DashboardCalendar = () => {
+const AllMeetings = () => {
 
   const newMeeting = {
     clientId: '',
@@ -103,18 +103,86 @@ const DashboardCalendar = () => {
     getAllMeetings();
   }, []);
 
+  const markComplete = async (id) => {
+    try {
+      const response = await markMeetingComplete(id)
+      toast.success('Meeting Marked Complete', { duration: 3000 })
+      getAllMeetings();
+    }
+    catch {
+      toast.success('Error Occured. Please Retry', { duration: 3000 })
+    }
+  }
+
+  const deleteMeeting = async (id) => {
+    try {
+      const response = await deleteMeetingById(id);
+      toast.success('Meeting Deleted Successfully.', { duration: 3000 })
+      getAllMeetings();
+    } catch {
+      toast.error('Error Deleteing Meeting', { duration: 3000 })
+    }
+  }
+
   const meetingColumns = [
     { field: 'id', headerName: 'ID', flex: 1 },
     { field: 'clientName', headerName: 'Client', flex: 1 },
     { field: 'meetingDate', headerName: 'Date', flex: 1 },
     { field: 'location', headerName: 'Location', flex: 1 },
-    { field: 'agenda', headerName: 'Agenda', flex: 1 }
+    { field: 'agenda', headerName: 'Agenda', flex: 1 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      renderCell: (params) => (
+        <div style={{ display: 'inline-flex' }}>
+          {params.row.status ? (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                transition: 'transform 0.5s',
+                color: '#176483'
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            >
+              <IconChecks onClick={() => markComplete(params.row._id)} />
+            </div>
+          ) : null}
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.5s',
+              color: 'red'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+          >
+            <IconX onClick={() => deleteMeeting(params.row._id)} />
+          </div>
+        </div>
+      ),
+      editable: false,
+      sortable: false,
+      filterable: false,
+    }
   ]
+
+  const getRowId = (row) => row.id;
+  const getRowClassName = (params) => {
+    const status = params.row.status;
+    return status ? 'activeRow' : 'inactiveRow';
+  };
 
   return (
     <div>
       <Card>
-        <CardHeader title='Meetings 🚀'></CardHeader>
+        <CardHeader title='All Meetings 🚀'></CardHeader>
         <CardContent>
           <div style={{ textAlign: "right", marginBottom: '15px' }}>
             <Button onClick={toggleAddMeeting} variant='contained' color='primary'>
@@ -139,6 +207,8 @@ const DashboardCalendar = () => {
               }}
               pageSizeOptions={[5, 10, 20]}
               slots={{ toolbar: GridToolbar }}
+              getRowId={getRowId}
+              getRowClassName={getRowClassName}
             >
             </DataGrid>
           </div>
@@ -216,9 +286,9 @@ const DashboardCalendar = () => {
   )
 }
 
-DashboardCalendar.acl = {
+AllMeetings.acl = {
   action: 'read',
-  subject: 'dashboard-calendar'
+  subject: 'meetings'
 }
 
-export default DashboardCalendar;
+export default AllMeetings;
