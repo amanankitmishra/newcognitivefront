@@ -5,6 +5,8 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import TodaysMeetings from './cards/TodaysMeetings'
+import ProposalReports from './cards/ProposalReports'
+import EnquiryReports from './cards/Enquiry Reports'
 
 const Home = () => {
   return (
@@ -13,7 +15,10 @@ const Home = () => {
         <TodaysMeetings />
       </Grid>
       <Grid item xs={6}>
-
+        <EnquiryReports />
+      </Grid>
+      <Grid item xs={12}>
+        <ProposalReports />
       </Grid>
     </Grid>
   )

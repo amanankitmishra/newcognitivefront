@@ -93,14 +93,14 @@ const navigation = () => {
     {
       title: 'Meetings',
       path: '/meetings',
-      icon: 'tabler:calendar-month',
+      icon: 'tabler:calendar-time',
       action: 'read',
       subject: 'meetings'
     },
     {
-      title: 'Visit Calendar',
+      title: 'Calendar',
       path: '/calendar',
-      icon: 'tabler:plane-inflight',
+      icon: 'tabler:calendar-month',
       action: 'read',
       subject: 'calendar'
     },

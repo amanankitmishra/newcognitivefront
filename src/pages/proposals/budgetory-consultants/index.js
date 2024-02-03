@@ -113,11 +113,7 @@ const ConsultantProposals = () => {
           <Card>
             <CardHeader title='Consultant Proposals 🚀'></CardHeader>
             <CardContent>
-              <div style={{ textAlign: 'right' }}>
-                <Button onClick={toggleSidebar} variant='contained' color='primary'>
-                  Add Proposal
-                </Button>
-              </div>
+
               <div style={{ height: '400px' }}>
                 <DataGrid
                   rows={allProposals}

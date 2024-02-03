@@ -204,6 +204,15 @@ export const fetchAllAnalytics = () => {
   return instance.get('/allAnalytics')
 }
 
+export const fetchProposalReports = () => {
+  return instance.get('/proposalReports')
+}
+
+export const fetchEnquiryReports = () => {
+  return instance.get('/enquiryReports')
+}
+
+
 // Meetings
 
 export const fetchMeetings = () => {
