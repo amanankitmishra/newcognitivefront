@@ -47,7 +47,7 @@ const ProposalReports = () => {
 
   return (
     <Card>
-      <CardHeader title='Proposals By Status 🚀' />
+      <CardHeader title='Proposals By Status - Monthly 🚀' />
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={flattenedData} margin={{ top: 10, right: 30, left: 0, bottom: 30 }}>

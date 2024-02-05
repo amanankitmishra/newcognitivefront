@@ -17,34 +17,71 @@ import {
   DialogActions,
   TextField,
   CardHeader,
+  Input,
+  InputLabel,
+  FormControl,
+  IconButton,
 } from '@mui/material';
 import Router from 'next/router';
-import { fetchProposalById } from 'src/utility/api';
+import { fetchProposalById, addRevisionToProposal } from 'src/utility/api'; // Update with your API functions
 import { formatTimestamp } from 'src/utility/utility';
 
 const ViewProposal = () => {
   const { id } = Router.query;
-  const [proposal, setProposal] = useState([])
+  const [proposal, setProposal] = useState([]);
+  const [openAddRevisionDialog, setOpenAddRevisionDialog] = useState(false);
+  const [revisionNumber, setRevisionNumber] = useState('');
+  const [comment, setComment] = useState('');
+  const [files, setFiles] = useState([]);
 
   const getProposal = async () => {
-    const response = await fetchProposalById(id)
-    setProposal(response.data)
-    console.log(response.data)
-  }
+    try {
+      const response = await fetchProposalById(id);
+      setProposal(response.data);
+    } catch (error) {
+      console.error('Error fetching proposal:', error);
+      toast.error('Failed to fetch proposal');
+    }
+  };
 
   useEffect(() => {
-    getProposal()
-  }, [])
+    getProposal();
+  }, []);
+
   const handleViewClient = (clientId) => {
     Router.push(`/clients/view?id=${clientId}`);
   };
 
+  const handleFileInputChange = (e) => {
+    const newFiles = Array.from(e.target.files);
+    setFiles(newFiles);
+  };
 
+  const handleAddRevision = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('revisionNumber', revisionNumber);
+      formData.append('comment', comment);
+
+      files.forEach((file, index) => {
+        formData.append(`files[${index}]`, file);
+      });
+
+      const response = await addRevisionToProposal(id, formData);
+      toast.success('Revision added successfully');
+      getProposal(); // Refresh proposal data
+      setOpenAddRevisionDialog(false);
+      setFiles([]); // Clear selected files
+    } catch (error) {
+      console.error('Error adding revision:', error);
+      toast.error('Failed to add revision');
+    }
+  };
 
   return (
     <div>
-      <Grid container>
-        <Grid item xs={12}>
+      <Grid container spacing={2}>
+        <Grid item xs={8}>
           <Card>
             <CardHeader title="Proposal Details" />
             <CardContent>
@@ -106,14 +143,69 @@ const ViewProposal = () => {
             </CardContent>
           </Card>
         </Grid>
+
+        {/* Right side with Revisions and Add Revision Button */}
+        <Grid item xs={4}>
+          <Card>
+            <CardHeader title="Revisions" />
+            <CardContent>
+              <Button onClick={() => setOpenAddRevisionDialog(true)} variant="contained" color="primary">
+                Add Revision
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
+
+      <Dialog open={openAddRevisionDialog} onClose={() => setOpenAddRevisionDialog(false)}>
+        <DialogTitle>Add Revision</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Revision Number"
+            variant="outlined"
+            fullWidth
+            value={revisionNumber}
+            onChange={(e) => setRevisionNumber(e.target.value)}
+            margin="normal"
+          />
+          <TextField
+            label="Comment"
+            variant="outlined"
+            fullWidth
+            multiline
+            rows={4}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            margin="normal"
+          />
+
+          <FormControl fullWidth margin="normal">
+            <InputLabel htmlFor="file-input">Files</InputLabel>
+            <Input
+              id="file-input"
+              type="file"
+              accept=".pdf, .doc, .docx, .jpg, .jpeg, .png, .zip"
+              multiple
+              onChange={handleFileInputChange}
+            />
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenAddRevisionDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleAddRevision} color="primary">
+            Add Revision
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
-  )
-}
+  );
+};
 
 ViewProposal.acl = {
   action: 'read',
-  subject: 'proposal'
-}
+  subject: 'proposal',
+};
 
-export default ViewProposal
+export default ViewProposal;

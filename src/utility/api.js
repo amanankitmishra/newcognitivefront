@@ -212,6 +212,10 @@ export const fetchEnquiryReports = () => {
   return instance.get('/enquiryReports')
 }
 
+export const fetchEnquiryCounts = () => {
+  return instance.get('/enquiriesCount')
+}
+
 
 // Meetings
 

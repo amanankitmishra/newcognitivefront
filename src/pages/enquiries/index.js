@@ -120,8 +120,7 @@ const Enquiries = () => {
   const getEnquiries = async () => {
     try {
       const res = await fetchEnquiries();
-
-      const ccc = res.data.allEnquiries.map((row) => ({
+      const ccc = res.data.map((row) => ({
         ...row,
         id: row._id,
         clientId: row.clientId._id,
@@ -130,8 +129,8 @@ const Enquiries = () => {
       }));
       setEnquiries(ccc);
       // console.log(ccc);
-    } catch {
-      console.log("error getting enquiries");
+    } catch (e) {
+      console.log(e);
     }
   }
 

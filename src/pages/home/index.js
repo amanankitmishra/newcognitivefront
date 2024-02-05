@@ -6,15 +6,15 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import TodaysMeetings from './cards/TodaysMeetings'
 import ProposalReports from './cards/ProposalReports'
-import EnquiryReports from './cards/Enquiry Reports'
+import EnquiryReports from './cards/EnquiryReports'
 
 const Home = () => {
   return (
     <Grid container spacing={6}>
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <TodaysMeetings />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <EnquiryReports />
       </Grid>
       <Grid item xs={12}>
