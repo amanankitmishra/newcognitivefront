@@ -45,12 +45,7 @@ const Enquiries = () => {
     { field: 'projectType', headerName: 'Type', flex: 1 },
     { field: 'uom', headerName: 'UOM', flex: 1 },
     { field: 'offerSubmitted', headerName: "Offer Submitted", flex: 1 },
-    { field: 'offerSubmissionDate', headerName: "Offer Submission Date", flex: 1 },
-    { field: 'quotedValue', headerName: "Quoted Value", flex: 1 },
-    { field: 'quotedMarginPercentage', headerName: "Quoted Margin Percentage", flex: 1 },
-    { field: 'quotedMarginValue', headerName: "Quoted Margin Value", flex: 1 },
-    { field: 'ratePerWatt', headerName: "Rate Per Watt", flex: 1 },
-    { field: 'revision', headerName: "Revision", flex: 1 },
+    { field: 'enquiryDate', headerName: "Enquiry Date", flex: 1 },
     { field: 'remark', headerName: 'Remark', flex: 1 },
     {
       field: 'actions',
@@ -125,7 +120,7 @@ const Enquiries = () => {
         id: row._id,
         clientId: row.clientId._id,
         clientName: row.clientId.clientName,
-        offerSubmissionDate: formatTimestamp(row.offerSubmissionDate)
+        enquiryDate: formatTimestamp(row.enquiryDate)
       }));
       setEnquiries(ccc);
       // console.log(ccc);
@@ -145,6 +140,7 @@ const Enquiries = () => {
     try {
       const response = createEnquiry(formData)
       toast.success('Enquiry Created Successfully', { duration: 3000 })
+      getEnquiries();
     } catch {
       toast.error('Error Creating Enquiry', { duration: 3000 })
     }
@@ -208,6 +204,16 @@ const Enquiries = () => {
     Router.push(`/clients/view?id=${clientId}`);
   };
 
+  const getRowId = (row) => row.id;
+  const getRowClassName = (params) => {
+    const offerSubmitted = params.row.offerSubmitted;
+    // return status ? 'activeRow' : 'inactiveRow';
+    if (offerSubmitted === 'YES') {
+      return 'activeRow'
+    }
+
+  };
+
   return (
     <div>
       <Grid container spacing={6}>
@@ -228,7 +234,7 @@ const Enquiries = () => {
                     columns: {
                       columnVisibilityModel: {
                         id: false,
-                        offerSubmissionDate: false,
+                        enquiryDate: false,
                         quotedMarginValue: false,
                         ratePerWatt: false
                       },
@@ -241,6 +247,8 @@ const Enquiries = () => {
                   }}
                   pageSizeOptions={[5, 10, 20]}
                   slots={{ toolbar: GridToolbar }}
+                  getRowId={getRowId}
+                  getRowClassName={getRowClassName}
                 />
               </div>
             </CardContent>

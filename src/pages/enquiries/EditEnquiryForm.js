@@ -12,16 +12,11 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     capacity: '',
     clientId: '',
-    offerSubmissionDate: '',
+    enquiryDate: '',
     offerSubmitted: '',
     project: '',
     projectType: '',
-    quotedMarginPercentage: '',
-    quotedMarginValue: '',
-    quotedValue: '',
-    ratePerWatt: '',
     remark: '',
-    revision: '',
     uom: '',
   });
 
@@ -42,16 +37,11 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
       setFormData({
         capacity: data.capacity || '',
         clientId: data.clientId || '',
-        offerSubmissionDate: data.offerSubmissionDate || '',
+        enquiryDate: data.enquirydate || '',
         offerSubmitted: data.offerSubmitted || '',
         project: data.project || '',
         projectType: data.projectType || '',
-        quotedMarginPercentage: data.quotedMarginPercentage || '',
-        quotedMarginValue: data.quotedMarginValue || '',
-        quotedValue: data.quotedValue || '',
-        ratePerWatt: data.ratePerWatt || '',
         remark: data.remark || '',
-        revision: data.revision || '',
         uom: data.uom || '',
       })
     }
@@ -63,6 +53,13 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
       ...prevData,
       [name]: value,
     }));
+    if (name === 'projectType') {
+      const uom = value === 'SPV' ? 'KWP' : value === 'SWH' ? 'LPD' : '';
+      setFormData((prevData) => ({
+        ...prevData,
+        uom,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -121,6 +118,7 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
           <TextField
             label='UOM'
             select
+            disabled
             name='uom'
             value={formData.uom}
             onChange={handleChange}
@@ -151,54 +149,12 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
           </TextField>
         </Grid>
         <Grid item xs={6}>
-          <TextField label='Offer Submission Date' type='date' name='offerSubmissionDate' value={formData.offerSubmissionDate} onChange={handleChange} fullWidth InputLabelProps={{
+          <TextField label='Enquiry Date' type='date' name='enquiryDate' value={formData.enquiryDate} onChange={handleChange} fullWidth InputLabelProps={{
             shrink: true,
           }}
             InputProps={{
               placeholder: 'dd/mm/yyyy',
             }} />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField label='Quoted Value' name='quotedValue' value={formData.quotedValue} onChange={handleChange} fullWidth />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField label='Quoted Margin Percentage' name='quotedMarginPercentage' value={formData.quotedMarginPercentage} onChange={handleChange} fullWidth />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField label='Quoted Margin Value' name='quotedMarginValue' value={formData.quotedMarginValue} onChange={handleChange} fullWidth />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label='Revision'
-            name='revision'
-            select
-            value={formData.revision}
-            onChange={handleChange}
-            fullWidth>
-            <MenuItem key={1} value={"R1"}>
-              R1
-            </MenuItem>
-            <MenuItem key={2} value={"R2"}>
-              R2
-            </MenuItem>
-            <MenuItem key={3} value={"R3"}>
-              R3
-            </MenuItem>
-            <MenuItem key={4} value={"R4"}>
-              R4
-            </MenuItem>
-            <MenuItem key={5} value={"R5"}>
-              R5
-            </MenuItem>
-          </TextField>
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label='Rate Per Watt'
-            name='ratePerWatt'
-            value={formData.ratePerWatt}
-            onChange={handleChange}
-            fullWidth />
         </Grid>
         <Grid item xs={6}>
           <TextField label='Remark' name='remark' value={formData.remark} onChange={handleChange} fullWidth multiline />

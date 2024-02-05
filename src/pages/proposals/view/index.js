@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import {
   Typography,
@@ -22,8 +22,15 @@ import {
   FormControl,
   IconButton,
 } from '@mui/material';
+import Timeline from '@mui/lab/Timeline';
+import TimelineItem from '@mui/lab/TimelineItem';
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+import TimelineContent from '@mui/lab/TimelineContent';
+import TimelineDot from '@mui/lab/TimelineDot';
+import { TimelineOppositeContent } from '@mui/lab';
 import Router from 'next/router';
-import { fetchProposalById, addRevisionToProposal } from 'src/utility/api'; // Update with your API functions
+import { fetchProposalById, addRevisionToProposal, getStaticFileUrl } from 'src/utility/api';
 import { formatTimestamp } from 'src/utility/utility';
 
 const ViewProposal = () => {
@@ -33,6 +40,8 @@ const ViewProposal = () => {
   const [revisionNumber, setRevisionNumber] = useState('');
   const [comment, setComment] = useState('');
   const [files, setFiles] = useState([]);
+  const fileInputRef = useRef(null);
+
 
   const getProposal = async () => {
     try {
@@ -55,25 +64,36 @@ const ViewProposal = () => {
   const handleFileInputChange = (e) => {
     const newFiles = Array.from(e.target.files);
     setFiles(newFiles);
+
+    // Clear the file input field
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
+
 
   const handleAddRevision = async () => {
     try {
-      const formData = new FormData();
-      formData.append('revisionNumber', revisionNumber);
-      formData.append('comment', comment);
+      const myFormData = new FormData();
+
+      myFormData.append('revisionNumber', revisionNumber);
+      myFormData.append('comment', comment);
 
       files.forEach((file, index) => {
-        formData.append(`files[${index}]`, file);
+        myFormData.append('files', file);
       });
 
-      const response = await addRevisionToProposal(id, formData);
+      const response = await addRevisionToProposal(id, myFormData);
+
       toast.success('Revision added successfully');
-      getProposal(); // Refresh proposal data
+      getProposal();
+      setRevisionNumber('');
+      setComment('');
       setOpenAddRevisionDialog(false);
-      setFiles([]); // Clear selected files
+      setFiles([]);
     } catch (error) {
       console.error('Error adding revision:', error);
+      setOpenAddRevisionDialog(false);
       toast.error('Failed to add revision');
     }
   };
@@ -144,7 +164,6 @@ const ViewProposal = () => {
           </Card>
         </Grid>
 
-        {/* Right side with Revisions and Add Revision Button */}
         <Grid item xs={4}>
           <Card>
             <CardHeader title="Revisions" />
@@ -152,6 +171,38 @@ const ViewProposal = () => {
               <Button onClick={() => setOpenAddRevisionDialog(true)} variant="contained" color="primary">
                 Add Revision
               </Button>
+              {proposal.revisions && proposal.revisions.length > 0 && (
+                <Timeline position="alternate">
+                  {proposal.revisions.map((revision, index) => (
+                    <TimelineItem key={index}>
+                      <TimelineOppositeContent>
+                        <Typography variant="body2" color="textSecondary">
+                          {formatTimestamp(revision.timestamp)}
+                        </Typography>
+                      </TimelineOppositeContent>
+                      <TimelineSeparator>
+                        <TimelineDot color='primary' />
+                        <TimelineConnector />
+                      </TimelineSeparator>
+                      <TimelineContent>
+                        <Typography variant="h6">{`Revision ${revision.revisionNumber}`}</Typography>
+                        <Typography>{`Comment: ${revision.comment}`}</Typography>
+                        {revision.files && revision.files.length > 0 && (
+                          <ul>
+                            {revision.files.map((file, fileIndex) => (
+                              <li key={fileIndex}>
+                                <a href={getStaticFileUrl(file)} target="_blank" rel="noopener noreferrer">
+                                  FILE {fileIndex + 1}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </TimelineContent>
+                    </TimelineItem>
+                  ))}
+                </Timeline>
+              )}
             </CardContent>
           </Card>
         </Grid>
@@ -180,14 +231,16 @@ const ViewProposal = () => {
           />
 
           <FormControl fullWidth margin="normal">
-            <InputLabel htmlFor="file-input">Files</InputLabel>
             <Input
               id="file-input"
               type="file"
               accept=".pdf, .doc, .docx, .jpg, .jpeg, .png, .zip"
-              multiple
               onChange={handleFileInputChange}
+              ref={fileInputRef}
+              inputProps={{ multiple: true }}
+              name='files'
             />
+
           </FormControl>
         </DialogContent>
         <DialogActions>

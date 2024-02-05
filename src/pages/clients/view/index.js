@@ -65,20 +65,21 @@ const ViewClient = () => {
       const response = await fetchClientById(id);
 
       // Rename _id to id for each contact person
-      const updatedContactPersons = response.data.contactPersons.map((cp) => ({
+      const updatedContactPersons = response.data.client.contactPersons.map((cp) => ({
         ...cp,
         id: cp._id,
       }));
 
       // Update the client object with the renamed contact persons
       const updatedClient = {
-        ...response.data,
+        ...response.data.client,
         contactPersons: updatedContactPersons,
       };
 
       // Update both client and contactPersons states
       setClient(updatedClient);
       setContactPersons(updatedClient.contactPersons);
+      console.log(response.data.proposals);
     } catch (error) {
       console.error('Error fetching client data:', error);
     }

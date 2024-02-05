@@ -24,6 +24,12 @@ instance.interceptors.request.use(
 )
 
 
+export function getStaticFileUrl(relativePath) {
+  const normalizedPath = relativePath.replace(/\\/g, "/")
+  return `${BASE_URL}/${normalizedPath}`
+}
+
+
 // Clients
 
 export const fetchClients = () => {
@@ -163,6 +169,10 @@ export const editProposal = (id, formData) => {
 
 export const deleteProposal = (id) => {
   return instance.delete(`/proposals/${id}`)
+}
+
+export const addRevisionToProposal = (id, formData) => {
+  return instance.post(`/addRevision/${id}`, formData)
 }
 
 //Sales Order
