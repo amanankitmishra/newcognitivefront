@@ -44,6 +44,8 @@ const ViewClient = () => {
   const [deleteContactPersonId, setDeleteContactPersonId] = useState(null);
   const [editContactPersonId, setEditContactPersonId] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(false);
+  const [proposals, setProposals] = useState([])
+  const [enquiries, setEnquiries] = useState([])
 
   const [newContactPerson, setNewContactPerson] = useState({
     contactPerson: '',
@@ -79,7 +81,8 @@ const ViewClient = () => {
       // Update both client and contactPersons states
       setClient(updatedClient);
       setContactPersons(updatedClient.contactPersons);
-      console.log(response.data.proposals);
+      setProposals(response.data.proposals);
+      setEnquiries(response.data.enquiries);
     } catch (error) {
       console.error('Error fetching client data:', error);
     }
@@ -351,6 +354,41 @@ const ViewClient = () => {
               </TableContainer>
             </CardContent>
           </Card>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              {enquiries && enquiries.length > 0 && (
+                <Card sx={{ marginTop: "10px" }}>
+                  <CardContent>
+                    <Typography variant='h6' sx={{ fontSize: '16px', textTransform: 'uppercase', pt: 4 }}>
+                      Enquiries
+                    </Typography>
+                    <ul>
+                      {enquiries.map((enquiry, index) => (
+                        <li key={index}>{enquiry.project.toUpperCase()} | Project Type : {enquiry.projectType} | Capacity : {enquiry.capacity}</li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
+            </Grid>
+            <Grid item xs={6}>
+              {proposals && proposals.length > 0 && (
+                <Card sx={{ marginTop: "10px" }}>
+                  <CardContent>
+                    <Typography variant='h6' sx={{ fontSize: '16px', textTransform: 'uppercase', pt: 4 }}>
+                      Proposals
+                    </Typography>
+                    <ul>
+                      {proposals.map((proposal, index) => (
+                        <li key={index}>{proposal.project.toUpperCase()} | Project Type : {proposal.projectType} | Capacity : {proposal.capacity}</li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
+            </Grid>
+          </Grid>
+
         </Grid>
         <Grid item xs={4}>
           <Card>

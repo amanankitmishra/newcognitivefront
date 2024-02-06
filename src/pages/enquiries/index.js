@@ -140,7 +140,7 @@ const Enquiries = () => {
     try {
       const response = createEnquiry(formData)
       toast.success('Enquiry Created Successfully', { duration: 3000 })
-      getEnquiries();
+      await getEnquiries();
     } catch {
       toast.error('Error Creating Enquiry', { duration: 3000 })
     }

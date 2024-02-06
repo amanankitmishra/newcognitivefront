@@ -55,6 +55,17 @@ const EditProposalForm = ({ data, onSubmit, onCancel }) => {
       ...prevData,
       [name]: value,
     }));
+    if (name === 'quotedMarginValue' || name === 'quotedValue') {
+      const quotedMarginValue = parseFloat(formData.quotedMarginValue) || 0;
+      const quotedValue = parseFloat(formData.quotedValue) || 1;
+
+      const calculatedQuotedMarginPercentage = (quotedMarginValue / quotedValue) * 100;
+
+      setFormData((prevData) => ({
+        ...prevData,
+        quotedMarginPercentage: isNaN(calculatedQuotedMarginPercentage) ? '' : calculatedQuotedMarginPercentage.toFixed(2),
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -146,10 +157,10 @@ const EditProposalForm = ({ data, onSubmit, onCancel }) => {
           <TextField label="Quoted Value" name="quotedValue" value={formData.quotedValue} onChange={handleChange} fullWidth />
         </Grid>
         <Grid item xs={6}>
-          <TextField label="Quoted Margin Percentage" name="quotedMarginPercentage" value={formData.quotedMarginPercentage} onChange={handleChange} fullWidth />
+          <TextField label="Quoted Margin Value" name="quotedMarginValue" value={formData.quotedMarginValue} onChange={handleChange} fullWidth />
         </Grid>
         <Grid item xs={6}>
-          <TextField label="Quoted Margin Value" name="quotedMarginValue" value={formData.quotedMarginValue} onChange={handleChange} fullWidth />
+          <TextField disabled label="Quoted Margin Percentage" name="quotedMarginPercentage" value={formData.quotedMarginPercentage} onChange={handleChange} fullWidth />
         </Grid>
         <Grid item xs={6}>
           <TextField label="Rate Per Watt" name="ratePerWatt" value={formData.ratePerWatt} onChange={handleChange} fullWidth />
