@@ -76,7 +76,16 @@ const VerticalNavHeader = props => {
       ) : (
         <LinkStyled href='/'>
           <HeaderTitle variant='h4' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 2.5 }) }}>
-            {themeConfig.templateName}
+            <img
+              src="/images/logo.png"
+              alt="Logo"
+              style={{
+                maxWidth: '80%',
+                height: 'auto',
+                ...menuCollapsedStyles,
+                ...(navCollapsed && !navHover ? {} : { marginLeft: '0px' }),
+              }}
+            />
           </HeaderTitle>
         </LinkStyled>
       )}
