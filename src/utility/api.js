@@ -249,4 +249,15 @@ export const deleteMeetingById = (id) => {
   return instance.delete(`/meetings/${id}`)
 }
 
+// product Routes
+
+export const fetchProducts = () => {
+  return instance.get('/products')
+}
+
+export const createProduct = (formData) => {
+  return instance.post('/products', formData)
+}
+
+
 export default instance
