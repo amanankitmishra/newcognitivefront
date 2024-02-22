@@ -1,101 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, Typography, Container, Button } from '@mui/material';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Sidebar from 'src/@core/components/sidebar';
-import ClientForm from './AddClientForm';
-import { Card, CardHeader, CardContent } from '@mui/material';
-import { IconDotsVertical, IconEye, IconX } from '@tabler/icons-react';
-import Link from 'next/link';
-import Router from 'next/router';
-import { fetchClients, createClient, deleteClient } from 'src/utility/api';
-import { formatTimestamp } from 'src/utility/utility';
-import toast from 'react-hot-toast';
-import ConfirmationDialog from 'src/utility/confirmation';
-
-
+import React, { useState, useEffect } from 'react'
+import { Grid, Typography, Container, Button } from '@mui/material'
+import { DataGrid, GridToolbar } from '@mui/x-data-grid'
+import Sidebar from 'src/@core/components/sidebar'
+import ClientForm from './AddClientForm'
+import { Card, CardHeader, CardContent } from '@mui/material'
+import { IconDotsVertical, IconEye, IconX } from '@tabler/icons-react'
+import Link from 'next/link'
+import Router from 'next/router'
+import { fetchClients, createClient, deleteClient } from 'src/utility/api'
+import { formatTimestamp } from 'src/utility/utility'
+import toast from 'react-hot-toast'
+import ConfirmationDialog from 'src/utility/confirmation'
 
 const ClientsMain = () => {
-  const [open, setOpen] = useState(false);
-  const [clients, setClients] = useState([]);
-  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-  const [deleteClientId, setDeleteClientId] = useState(null);
+  const [open, setOpen] = useState(false)
+  const [clients, setClients] = useState([])
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [deleteClientId, setDeleteClientId] = useState(null)
 
   const fetchClientsData = async () => {
     try {
-      const clientsDataFromServer = await fetchClients();
+      const clientsDataFromServer = await fetchClients()
 
-      const clientsDataWithId = clientsDataFromServer.data.allClients.map((row) => ({
+      const clientsDataWithId = clientsDataFromServer.data.allClients.map(row => ({
         ...row,
         id: row._id,
-      }));
+        nature: row.nature.toUpperCase()
+      }))
 
-      setClients(clientsDataWithId);
+      setClients(clientsDataWithId)
     } catch (error) {
-      console.error('Error fetching clients:', error);
+      console.error('Error fetching clients:', error)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchClientsData();
-  }, []);
+    fetchClientsData()
+  }, [])
 
   const toggleSidebar = () => {
-    setOpen(!open);
-  };
+    setOpen(!open)
+  }
 
-  const handleAddClient = async (formData) => {
+  const handleAddClient = async formData => {
     try {
-      const response = await createClient(formData);
+      const response = await createClient(formData)
       if (response.status === 201) {
-
         // Show success notification
 
-        toast.success('Client added successfully', { duration: 3000 });
-        fetchClientsData();
-
+        toast.success('Client added successfully', { duration: 3000 })
+        fetchClientsData()
       } else {
-
         // Show error notification
-        toast.error('Error adding client', { duration: 3000 });
+        toast.error('Error adding client', { duration: 3000 })
       }
     } catch (error) {
-      console.error('Error adding client:', error);
-      toast.error('Error adding client', { duration: 3000 });
+      console.error('Error adding client:', error)
+      toast.error('Error adding client', { duration: 3000 })
     }
 
     // Close the sidebar in both success and error cases
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   const handleCancel = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
-  const handleViewClient = (clientId) => {
-    Router.push(`/clients/view?id=${clientId}`);
-  };
+  const handleViewClient = clientId => {
+    Router.push(`/clients/view?id=${clientId}`)
+  }
 
-  const handleDelete = (id) => {
-    setDeleteClientId(id);
-    setConfirmationDialogOpen(true);
-  };
+  const handleDelete = id => {
+    setDeleteClientId(id)
+    setConfirmationDialogOpen(true)
+  }
 
   const handleConfirmationDialogClose = () => {
-    setConfirmationDialogOpen(false);
-  };
+    setConfirmationDialogOpen(false)
+  }
 
   const handleConfirmationDialogConfirm = async () => {
     try {
       // console.log(deleteEnquiryId)
-      await deleteClient(deleteClientId);
-      toast.success('Client deleted successfully', { duration: 3000 });
-      fetchClientsData();
+      await deleteClient(deleteClientId)
+      toast.success('Client deleted successfully', { duration: 3000 })
+      fetchClientsData()
     } catch {
-      toast.error('Error deleting client', { duration: 3000 });
+      toast.error('Error deleting client', { duration: 3000 })
     } finally {
-      setConfirmationDialogOpen(false);
+      setConfirmationDialogOpen(false)
     }
-  };
+  }
 
   const columns = [
     { field: 'id', headerName: 'ID', flex: 1 },
@@ -103,8 +99,7 @@ const ClientsMain = () => {
     {
       field: 'officeAddress',
       headerName: 'Office Address',
-      flex: 1,
-
+      flex: 1
     },
     { field: 'nature', headerName: 'Nature Of Client', flex: 1 },
     { field: 'city', headerName: 'City', flex: 1 },
@@ -113,10 +108,12 @@ const ClientsMain = () => {
       field: 'actions',
       headerName: 'Actions',
       flex: 1,
-      renderCell: (params) => (
-        <div style={{
-          display: 'inline-flex'
-        }}>
+      renderCell: params => (
+        <div
+          style={{
+            display: 'inline-flex'
+          }}
+        >
           <div
             style={{
               display: 'flex',
@@ -125,8 +122,8 @@ const ClientsMain = () => {
               transition: 'transform 0.5s',
               paddingRight: '5px'
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
             onClick={() => handleViewClient(params.row.id)}
           >
             <IconEye />
@@ -137,10 +134,10 @@ const ClientsMain = () => {
               alignItems: 'center',
               cursor: 'pointer',
               transition: 'transform 0.5s',
-              color: 'red',
+              color: 'red'
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
             onClick={() => handleDelete(params.row.id)}
           >
             <IconX />
@@ -149,10 +146,9 @@ const ClientsMain = () => {
       ),
       editable: false,
       sortable: false,
-      filterable: false,
-    },
-  ];
-
+      filterable: false
+    }
+  ]
 
   return (
     <div>
@@ -176,12 +172,12 @@ const ClientsMain = () => {
                         id: false,
                         officeAddress: false,
                         officeLocation: false,
-                        designation: false,
-                      },
+                        designation: false
+                      }
                     },
                     pagination: {
                       paginationModel: {
-                        pageSize: 5,
+                        pageSize: 5
                       }
                     }
                   }}
@@ -194,8 +190,7 @@ const ClientsMain = () => {
         </Grid>
       </Grid>
       <Sidebar show={open} sx={{ padding: 5 }}>
-        <ClientForm onSubmit={handleAddClient}
-          onCancel={handleCancel} />
+        <ClientForm onSubmit={handleAddClient} onCancel={handleCancel} />
       </Sidebar>
       <ConfirmationDialog
         open={confirmationDialogOpen}
@@ -203,12 +198,12 @@ const ClientsMain = () => {
         onConfirm={handleConfirmationDialogConfirm}
       />
     </div>
-  );
-};
+  )
+}
 
 ClientsMain.acl = {
   action: 'read',
   subject: 'client'
 }
 
-export default ClientsMain;
+export default ClientsMain
