@@ -259,5 +259,9 @@ export const createProduct = (formData) => {
   return instance.post('/products', formData)
 }
 
+export const deleteProduct = (id) => {
+  return instance.delete(`/products/${id}`)
+}
+
 
 export default instance

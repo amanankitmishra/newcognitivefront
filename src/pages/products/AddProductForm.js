@@ -15,19 +15,8 @@ import {
 import { IconPlus, IconMinus } from '@tabler/icons-react';
 
 const initialFormData = {
-  clientName: '',
-  officeAddress: '',
-  city: '',
-  state: '',
-  nature: '',
-  contactPersons: [
-    {
-      contactPerson: '',
-      contactNumber: '',
-      contactEmail: '',
-      contactDesignation: '',
-    },
-  ],
+  name: '',
+  description: ''
 };
 
 const ProductForm = ({ onSubmit, onCancel }) => {
@@ -40,43 +29,6 @@ const ProductForm = ({ onSubmit, onCancel }) => {
     }));
   };
 
-  const handleContactPersonChange = (index, field, value) => {
-    const updatedContactPersons = [...formData.contactPersons];
-    updatedContactPersons[index] = {
-      ...updatedContactPersons[index],
-      [field]: value,
-    };
-
-    setFormData((prevData) => ({
-      ...prevData,
-      contactPersons: updatedContactPersons,
-    }));
-  };
-
-  const addContactPerson = () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      contactPersons: [
-        ...prevData.contactPersons,
-        {
-          contactPerson: '',
-          contactNumber: '',
-          contactEmail: '',
-          contactDesignation: '',
-        },
-      ],
-    }));
-  };
-
-  const removeContactPerson = (index) => {
-    const updatedContactPersons = [...formData.contactPersons];
-    updatedContactPersons.splice(index, 1);
-
-    setFormData((prevData) => ({
-      ...prevData,
-      contactPersons: updatedContactPersons,
-    }));
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -86,114 +38,23 @@ const ProductForm = ({ onSubmit, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Typography variant="h5" sx={{ pb: 2 }}>Add Client</Typography>
+      <Typography variant="h5" sx={{ pb: 2 }}>Add Product</Typography>
       <Grid container spacing={2} maxWidth='sm'>
-        <Grid item xs={6}>
-          <TextField
-            label="Client Name"
-            fullWidth
-            value={formData.clientName}
-            onChange={(e) => handleInputChange('clientName', e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Nature</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="nature"
-              value={formData.nature}
-              label="Nature"
-              onChange={(e) => handleInputChange('nature', e.target.value)}
-
-            >
-              <MenuItem value="contractor">Contractor</MenuItem>
-              <MenuItem value="consultant">Consultant</MenuItem>
-              <MenuItem value="endCustomer">End Customer</MenuItem>
-              <MenuItem value="others">Other</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Office Address"
+            label="Name"
             fullWidth
-            value={formData.officeAddress}
-            onChange={(e) => handleInputChange('officeAddress', e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label="City"
-            fullWidth
-            value={formData.city}
-            onChange={(e) => handleInputChange('city', e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label="State"
-            fullWidth
-            value={formData.state}
-            onChange={(e) => handleInputChange('state', e.target.value)}
+            value={formData.name}
+            onChange={(e) => handleInputChange('name', e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h6">Contact Persons</Typography>
-        </Grid>
-        <Grid item xs={12}>
-          {formData.contactPersons.map((contactPerson, index) => (
-            <Grid container spacing={2} key={index} sx={{ pb: 2 }}>
-              <Grid item xs={3}>
-                <TextField
-                  label="Contact Person"
-                  fullWidth
-                  value={contactPerson.contactPerson}
-                  onChange={(e) => handleContactPersonChange(index, 'contactPerson', e.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      index > 0 && (
-                        <InputAdornment position="start">
-                          <IconButton onClick={() => removeContactPerson(index)}>
-                            <IconMinus />
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  label="Contact Number"
-                  fullWidth
-                  value={contactPerson.contactNumber}
-                  onChange={(e) => handleContactPersonChange(index, 'contactNumber', e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  label="Contact Email"
-                  fullWidth
-                  value={contactPerson.contactEmail}
-                  onChange={(e) => handleContactPersonChange(index, 'contactEmail', e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  label="Contact Designation"
-                  fullWidth
-                  value={contactPerson.contactDesignation}
-                  onChange={(e) => handleContactPersonChange(index, 'contactDesignation', e.target.value)}
-                />
-              </Grid>
-            </Grid>
-          ))}
-        </Grid>
-        <Grid item xs={12}>
-          <IconButton onClick={addContactPerson}>
-            <IconPlus />
-          </IconButton>
+          <TextField
+            label="Description"
+            fullWidth
+            value={formData.description}
+            onChange={(e) => handleInputChange('description', e.target.value)}
+          />
         </Grid>
       </Grid>
       <Grid container sx={{ marginTop: 2 }} spacing={2} justifyContent='flex-end'>

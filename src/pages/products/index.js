@@ -7,7 +7,7 @@ import { Card, CardHeader, CardContent } from '@mui/material';
 import { IconDotsVertical, IconEye, IconX } from '@tabler/icons-react';
 import Link from 'next/link';
 import Router from 'next/router';
-import { fetchProducts } from 'src/utility/api';
+import { fetchProducts, createProduct, deleteProduct } from 'src/utility/api';
 import { formatTimestamp } from 'src/utility/utility';
 import toast from 'react-hot-toast';
 import ConfirmationDialog from 'src/utility/confirmation';
@@ -18,7 +18,7 @@ const Products = () => {
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-  const [deleteClientId, setDeleteClientId] = useState(null);
+  const [deleteProductId, setDeleteProductId] = useState(null);
 
   const fetchProductsData = async () => {
     try {
@@ -43,27 +43,25 @@ const Products = () => {
     setOpen(!open);
   };
 
-  const handleAddClient = async (formData) => {
+  const handleAddProduct = async (formData) => {
     try {
-      const response = await createClient(formData);
+      const response = await createProduct(formData);
       if (response.status === 201) {
 
         // Show success notification
 
-        toast.success('Client added successfully', { duration: 3000 });
-        fetchClientsData();
+        toast.success('Product added successfully', { duration: 3000 });
+        fetchProductsData();
 
       } else {
 
         // Show error notification
-        toast.error('Error adding client', { duration: 3000 });
+        toast.error('Error adding product', { duration: 3000 });
       }
     } catch (error) {
-      console.error('Error adding client:', error);
-      toast.error('Error adding client', { duration: 3000 });
+      toast.error('Error adding product', { duration: 3000 });
     }
 
-    // Close the sidebar in both success and error cases
     setOpen(false);
   };
 
@@ -71,12 +69,8 @@ const Products = () => {
     setOpen(false);
   };
 
-  const handleViewClient = (clientId) => {
-    Router.push(`/clients/view?id=${clientId}`);
-  };
-
   const handleDelete = (id) => {
-    setDeleteClientId(id);
+    setDeleteProductId(id);
     setConfirmationDialogOpen(true);
   };
 
@@ -87,11 +81,11 @@ const Products = () => {
   const handleConfirmationDialogConfirm = async () => {
     try {
       // console.log(deleteEnquiryId)
-      await deleteClient(deleteClientId);
-      toast.success('Client deleted successfully', { duration: 3000 });
-      fetchClientsData();
+      await deleteProduct(deleteProductId);
+      toast.success('Product deleted successfully', { duration: 3000 });
+      fetchProductsData();
     } catch {
-      toast.error('Error deleting client', { duration: 3000 });
+      toast.error('Error deleting product', { duration: 3000 });
     } finally {
       setConfirmationDialogOpen(false);
     }
@@ -101,6 +95,29 @@ const Products = () => {
     { field: 'id', headerName: 'ID', flex: 1 },
     { field: 'name', headerName: 'Product Name', flex: 1 },
     { field: 'description', headerName: 'Description', flex: 1 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      renderCell: (params) => (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            transition: 'transform 0.5s',
+            color: 'red'
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+        >
+          <IconX onClick={() => handleDelete(params.row.id)} />
+        </div>
+      ),
+      editable: false,
+      sortable: false,
+      filterable: false,
+    }
   ];
 
 
@@ -144,7 +161,7 @@ const Products = () => {
         </Grid>
       </Grid>
       <Sidebar show={open} sx={{ padding: 5 }}>
-        <ProductForm onSubmit={handleAddClient}
+        <ProductForm onSubmit={handleAddProduct}
           onCancel={handleCancel} />
       </Sidebar>
       <ConfirmationDialog
@@ -158,7 +175,7 @@ const Products = () => {
 
 Products.acl = {
   action: 'read',
-  subject: 'client'
+  subject: 'product'
 }
 
 export default Products;

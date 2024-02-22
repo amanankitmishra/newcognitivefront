@@ -15,6 +15,13 @@ const navigation = () => {
       subject: 'client'
     },
     {
+      title: 'Products',
+      path: '/products',
+      icon: 'tabler:building-store',
+      action: 'read',
+      subject: 'product'
+    },
+    {
       title: 'Opportunity Leads',
       path: '/oleads',
       icon: 'tabler:loader-quarter',
