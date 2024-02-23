@@ -22,6 +22,13 @@ const navigation = () => {
       subject: 'product'
     },
     {
+      title: 'Vendors',
+      path: '/vendors',
+      icon: 'tabler:building-warehouse',
+      action: 'read',
+      subject: 'vendor'
+    },
+    {
       title: 'Opportunity Leads',
       path: '/oleads',
       icon: 'tabler:loader-quarter',
@@ -73,7 +80,7 @@ const navigation = () => {
           path: '/proposals/budgetory-contractors',
           action: 'read',
           subject: 'proposal'
-        },
+        }
       ]
     },
     {
@@ -110,7 +117,7 @@ const navigation = () => {
       icon: 'tabler:calendar-month',
       action: 'read',
       subject: 'calendar'
-    },
+    }
   ]
 }
 
