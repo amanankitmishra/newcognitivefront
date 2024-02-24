@@ -274,4 +274,12 @@ export const addContactPersonVendor = (id, formData) => {
   return instance.post(`/vendors/addContactPerson/${id}`, formData)
 }
 
+export const editContactPersonsVendor = (vendorId, contactPersonId, formData) => {
+  return instance.patch(`/vendors/editContactPerson/${vendorId}/contactPersons/${contactPersonId}`, formData)
+}
+
+export const deleteContactPersonVendor = (clientId, contactPersonId) => {
+  return instance.delete(`/vendors/deleteContactPerson/${clientId}/contactPersons/${contactPersonId}`)
+}
+
 export default instance

@@ -28,7 +28,12 @@ import TimelineContent from '@mui/lab/TimelineContent'
 import TimelineDot from '@mui/lab/TimelineDot'
 import Router from 'next/router'
 import { IconUserPlus, IconCalendarPlus } from '@tabler/icons-react' // Assuming you have a calendar icon
-import { getVendorById, addContactPersonVendor } from 'src/utility/api'
+import {
+  getVendorById,
+  addContactPersonVendor,
+  editContactPersonsVendor,
+  deleteContactPersonVendor
+} from 'src/utility/api'
 import { formatTimestamp } from 'src/utility/utility'
 import { IconX, IconEdit } from '@tabler/icons-react'
 import ConfirmationDialog from 'src/utility/confirmation'
@@ -38,6 +43,11 @@ const ViewClient = () => {
   const [vendor, setVendor] = useState(null)
   const [openModal, setOpenModal] = useState(false)
   const [contactPersons, setContactPersons] = useState([])
+  const [editContactPersonId, setEditContactPersonId] = useState(null)
+  const [editContactPerson, setEditContactPerson] = useState({})
+  const [openEditModal, setOpenEditModal] = useState(false)
+  const [deleteContactPersonId, setDeleteContactPersonId] = useState(null)
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
 
   const [newContactPerson, setNewContactPerson] = useState({
     contactPerson: '',
@@ -90,6 +100,57 @@ const ViewClient = () => {
 
     // Close the modal
     handleCloseModal()
+  }
+
+  const handleEditContactPerson = contact => {
+    setEditContactPersonId(contact._id)
+
+    const toBeEdited = {
+      contactPerson: contact.contactPerson,
+      contactNumber: contact.contactNumber,
+      contactEmail: contact.contactEmail,
+      contactDesignation: contact.contactDesignation
+    }
+    setEditContactPerson(toBeEdited)
+
+    setOpenEditModal(true)
+  }
+
+  const handleCloseEditModal = () => {
+    setOpenEditModal(false)
+  }
+
+  const handleEditSubmit = async () => {
+    try {
+      const response = await editContactPersonsVendor(id, editContactPersonId, editContactPerson)
+      toast.success('Contact Person Edited', { duration: 3000 })
+      getVendorDetails()
+    } catch (e) {
+      console.log(e)
+      toast.error('Error Editing Contact Person', { duration: 3000 })
+    }
+    setOpenEditModal(false)
+  }
+
+  const handleDeleteContactPerson = id => {
+    setDeleteContactPersonId(id)
+    setConfirmationDialogOpen(true)
+  }
+
+  const handleConfirmationDialogClose = () => {
+    setConfirmationDialogOpen(false)
+  }
+
+  const handleConfirmationDialogConfirm = async () => {
+    try {
+      await deleteContactPersonVendor(id, deleteContactPersonId)
+      toast.success('Contact Person deleted successfully', { duration: 3000 })
+      getVendorDetails()
+    } catch {
+      toast.error('Error deleting Contact Person', { duration: 3000 })
+    } finally {
+      setConfirmationDialogOpen(false)
+    }
   }
 
   if (!vendor) {
@@ -233,6 +294,53 @@ const ViewClient = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Dialog open={openEditModal} onClose={handleCloseEditModal}>
+        <DialogTitle>Edit Contact Person</DialogTitle>
+        <DialogContent>
+          {/* Form to add new contact person */}
+          <TextField
+            label='Contact Person'
+            value={editContactPerson.contactPerson}
+            onChange={e => setEditContactPerson({ ...editContactPerson, contactPerson: e.target.value })}
+            fullWidth
+            margin='normal'
+          />
+          <TextField
+            label='Contact Number'
+            value={editContactPerson.contactNumber}
+            onChange={e => setEditContactPerson({ ...editContactPerson, contactNumber: e.target.value })}
+            fullWidth
+            margin='normal'
+          />
+          <TextField
+            label='Contact Email'
+            value={editContactPerson.contactEmail}
+            onChange={e => setEditContactPerson({ ...editContactPerson, contactEmail: e.target.value })}
+            fullWidth
+            margin='normal'
+          />
+          <TextField
+            label='Contact Designation'
+            value={editContactPerson.contactDesignation}
+            onChange={e => setEditContactPerson({ ...editContactPerson, contactDesignation: e.target.value })}
+            fullWidth
+            margin='normal'
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditModal} color='secondary'>
+            Cancel
+          </Button>
+          <Button onClick={handleEditSubmit} color='primary'>
+            Edit Contact Person
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <ConfirmationDialog
+        open={confirmationDialogOpen}
+        onClose={handleConfirmationDialogClose}
+        onConfirm={handleConfirmationDialogConfirm}
+      />
     </div>
   )
 }
