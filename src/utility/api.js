@@ -252,6 +252,10 @@ export const deleteProduct = id => {
   return instance.delete(`/products/${id}`)
 }
 
+export const getProductList = () => {
+  return instance.get('/allProducts/names')
+}
+
 // Vendor Routes
 
 export const fetchVendors = () => {
@@ -282,15 +286,102 @@ export const deleteContactPersonVendor = (clientId, contactPersonId) => {
   return instance.delete(`/vendors/deleteContactPerson/${clientId}/contactPersons/${contactPersonId}`)
 }
 
+export const getVendorList = () => {
+  return instance.get('/allVendors/names')
+}
 
 //Settings Routes
+
+export const fetchTradingProposalNumbers = () => {
+  return instance.get('/tradingProposalNumbers')
+}
+
+export const addTradingProposalNumber = formData => {
+  return instance.post('/tradingProposalNumber', formData)
+}
+
+export const markActiveTradingProposalNumber = id => {
+  return instance.patch(`/tradingProposalNumber/${id}`, { active: true })
+}
+
+export const deleteTradingProposalNumber = id => {
+  return instance.delete(`/tradingProposalNumber/${id}`)
+}
 
 export const fetchTradingEnquiryNumbers = () => {
   return instance.get('/tradingEnquiryNumbers')
 }
 
-export const addTradingEnquiryNumber = (formData) => {
-  return instance.post('/tradingEnquiryNumbers', formData)
+export const addTradingEnquiryNumber = formData => {
+  return instance.post('/tradingEnquiryNumber', formData)
+}
+
+export const markActiveTradingEnquiryNumber = id => {
+  return instance.patch(`/tradingEnquiryNumber/${id}`, { active: true })
+}
+
+export const deleteTradingEnquiryNumber = id => {
+  return instance.delete(`/tradingEnquiryNumber/${id}`)
+}
+
+//TradingEnquiry
+
+export const createTradingEnquiry = formData => {
+  return instance.post('/tradingEnquiries', formData)
+}
+
+export const fetchTradingEnquiries = () => {
+  return instance.get('/tradingEnquiries')
+}
+
+export const editTradingEnquiry = (id, formData) => {
+  return instance.patch(`/tradingEnquiries/${id}`, formData)
+}
+
+export const fetchTradingEnquiryById = id => {
+  return instance.get(`/tradingEnquiries/${id}`)
+}
+
+export const deleteTradingEnquiry = id => {
+  return instance.delete(`/tradingEnquiries/${id}`)
+}
+
+// Trading Proposals
+
+export const createTradingProposal = formData => {
+  return instance.post('/tradingProposals', formData)
+}
+
+export const fetchTradingProposals = () => {
+  return instance.get('/tradingProposals')
+}
+
+export const fetchLiveTradingProposals = () => {
+  return instance.get('/livetradingproposals')
+}
+
+export const fetchLiveHotTradingProposals = () => {
+  return instance.get('/livehottradingproposals')
+}
+
+export const fetchContractorTradingProposals = () => {
+  return instance.get('/contractortradingproposals')
+}
+
+export const fetchTradingProposalById = id => {
+  return instance.get(`/TradingProposals/${id}`)
+}
+
+export const editTradingProposal = (id, formData) => {
+  return instance.put(`/tradingProposals/${id}`, formData)
+}
+
+export const deleteTradingProposal = id => {
+  return instance.delete(`/tradingProposals/${id}`)
+}
+
+export const addRevisionToTradingProposal = (id, formData) => {
+  return instance.post(`/tradingProposalAddRevision/${id}`, formData)
 }
 
 export default instance
