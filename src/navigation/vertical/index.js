@@ -100,7 +100,7 @@ const navigation = () => {
     {
       title: 'Users',
       path: '/users',
-      icon: 'tabler:book-2',
+      icon: 'tabler:users-plus',
       action: 'read',
       subject: 'user'
     },
@@ -117,6 +117,13 @@ const navigation = () => {
       icon: 'tabler:calendar-month',
       action: 'read',
       subject: 'calendar'
+    },
+    {
+      title: 'Settings',
+      path: '/settings',
+      icon: 'tabler:settings',
+      action: 'manage',
+      subject: 'settings'
     }
   ]
 }

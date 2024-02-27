@@ -282,4 +282,15 @@ export const deleteContactPersonVendor = (clientId, contactPersonId) => {
   return instance.delete(`/vendors/deleteContactPerson/${clientId}/contactPersons/${contactPersonId}`)
 }
 
+
+//Settings Routes
+
+export const fetchTradingEnquiryNumbers = () => {
+  return instance.get('/tradingEnquiryNumbers')
+}
+
+export const addTradingEnquiryNumber = (formData) => {
+  return instance.post('/tradingEnquiryNumbers', formData)
+}
+
 export default instance
