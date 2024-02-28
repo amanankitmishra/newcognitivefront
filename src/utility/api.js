@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost:5000'
+// const BASE_URL = 'http://localhost:5000'
 
-// const BASE_URL = "https://sea-lion-app-p56d8.ondigitalocean.app";
+const BASE_URL = 'https://sea-lion-app-p56d8.ondigitalocean.app'
 
 const instance = axios.create({
   baseURL: BASE_URL
