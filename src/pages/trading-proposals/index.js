@@ -9,7 +9,7 @@ import Sidebar from 'src/@core/components/sidebar'
 import { Button } from '@mui/material'
 import AddProposalForm from './AddProposalForm'
 import EditProposalForm from './EditProposalForm'
-import { createTradingProposal, fetchTradingProposals, editProposal, deleteProposal } from 'src/utility/api'
+import { createTradingProposal, fetchTradingProposals, editProposal, deleteTradingProposal } from 'src/utility/api'
 import toast from 'react-hot-toast'
 import Router from 'next/router'
 import { IconEye, IconEdit, IconX } from '@tabler/icons-react'
@@ -17,7 +17,7 @@ import ConfirmationDialog from 'src/utility/confirmation'
 
 const Proposals = () => {
   const handleViewProposal = clientId => {
-    Router.push(`/proposals/view?id=${clientId}`)
+    Router.push(`/trading-proposals/view?id=${clientId}`)
   }
 
   const handleViewClient = clientId => {
@@ -26,6 +26,7 @@ const Proposals = () => {
 
   const columns = [
     { field: 'id', headerName: 'S.No.', flex: 1 },
+    { field: 'quotationNumber', headerName: 'Quotation Number', flex: 1 },
     {
       field: 'clientName',
       headerName: 'Client',
@@ -63,14 +64,13 @@ const Proposals = () => {
       )
     },
     { field: 'project', headerName: 'Project', flex: 1 },
-    { field: 'projectType', headerName: 'SPV / SWH', flex: 1 },
-    { field: 'capacity', headerName: 'Capacity', flex: 1 },
+    { field: 'quantity', headerName: 'Product Quantity', flex: 1 },
     { field: 'uom', headerName: 'UOM', flex: 1 },
-    { field: 'quotedValue', headerName: 'Quoted Value', flex: 1 },
-    { field: 'ratePerWatt', headerName: 'Rate Per Watt', flex: 1 },
-    { field: 'quotedMarginValue', headerName: 'Quoted Margin Value', flex: 1 },
-    { field: 'quotedMarginPercentage', headerName: 'Quoted Margin Percentage', flex: 1 },
-    { field: 'remark', headerName: 'Remarks', flex: 1 },
+    { field: 'quotedValueToClient', headerName: 'Quoted Value - Client', flex: 1 },
+    { field: 'quotedValueToVendor', headerName: 'Quoted Value - Vendor', flex: 1 },
+    { field: 'marginValue', headerName: 'Margin Value', flex: 1 },
+    { field: 'marginPercentage', headerName: 'Margin %', flex: 1 },
+    { field: 'remarks', headerName: 'Remarks', flex: 1 },
     {
       field: 'actions',
       headerName: 'Actions',
@@ -204,7 +204,7 @@ const Proposals = () => {
 
   const handleConfirmationDialogConfirm = async () => {
     try {
-      await deleteProposal(deleteProposalId)
+      await deleteTradingProposal(deleteProposalId)
       toast.success('Proposal deleted successfully', { duration: 3000 })
     } catch {
       toast.error('Error deleting proposal', { duration: 3000 })
@@ -234,11 +234,12 @@ const Proposals = () => {
                     columns: {
                       columnVisibilityModel: {
                         id: false,
-                        quotedMarginValue: false,
-                        quotedMarginPercentage: false,
-                        projectType: false,
+                        marginValue: false,
                         uom: false,
-                        remark: false
+                        remarks: false,
+                        quotedValueToClient: false,
+                        quotedValueToVendor: false,
+                        quantity: false
                       }
                     },
                     pagination: {

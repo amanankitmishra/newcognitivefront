@@ -8,7 +8,7 @@ const Settings = () => {
   }
 
   const tradingProposal = () => {
-    Router.push(`/settings/trading-proposals`)
+    Router.push(`/settings/trading-proposal`)
   }
 
   return (

@@ -30,12 +30,13 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import { TimelineOppositeContent } from '@mui/lab';
 import Router from 'next/router';
-import { fetchProposalById, addRevisionToProposal, getStaticFileUrl } from 'src/utility/api';
+import { fetchTradingProposalById, addRevisionToTradingProposal, getStaticFileUrl } from 'src/utility/api';
 import { formatTimestamp } from 'src/utility/utility';
 
 const ViewProposal = () => {
   const { id } = Router.query;
   const [proposal, setProposal] = useState([]);
+  const [product, setProduct] = useState([])
   const [openAddRevisionDialog, setOpenAddRevisionDialog] = useState(false);
   const [revisionNumber, setRevisionNumber] = useState('');
   const [comment, setComment] = useState('');
@@ -45,8 +46,9 @@ const ViewProposal = () => {
 
   const getProposal = async () => {
     try {
-      const response = await fetchProposalById(id);
-      setProposal(response.data);
+      const response = await fetchTradingProposalById(id);
+      setProposal(response.data.proposal);
+      setProduct(response.data.product)
     } catch (error) {
       console.error('Error fetching proposal:', error);
       toast.error('Failed to fetch proposal');
@@ -59,6 +61,9 @@ const ViewProposal = () => {
 
   const handleViewClient = (clientId) => {
     Router.push(`/clients/view?id=${clientId}`);
+  };
+  const handleViewVendor = (vendorId) => {
+    Router.push(`/vendors/view?id=${vendorId}`);
   };
 
   const handleFileInputChange = (e) => {
@@ -83,7 +88,7 @@ const ViewProposal = () => {
         myFormData.append('files', file);
       });
 
-      const response = await addRevisionToProposal(id, myFormData);
+      const response = await addRevisionToTradingProposal(id, myFormData);
 
       toast.success('Revision added successfully');
       getProposal();
@@ -122,12 +127,16 @@ const ViewProposal = () => {
                         <TableCell>{proposal.uom}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Quoted Margin Percentage</TableCell>
-                        <TableCell>{proposal.quotedMarginPercentage}</TableCell>
+                        <TableCell>Quoted Value - Client</TableCell>
+                        <TableCell>{proposal.quotedValueToClient}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Rate Per Watt</TableCell>
-                        <TableCell>{proposal.ratePerWatt}</TableCell>
+                        <TableCell>Quoted Value - Vendor</TableCell>
+                        <TableCell>{proposal.quotedValueToVendor}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Margin Value</TableCell>
+                        <TableCell>{proposal.marginValue}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -136,30 +145,35 @@ const ViewProposal = () => {
                   <Table>
                     <TableBody>
                       <TableRow>
-                        <TableCell>Project Type</TableCell>
-                        <TableCell>{proposal.projectType}</TableCell>
+                        <TableCell>Product Name</TableCell>
+                        <TableCell>{product.name}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Capacity</TableCell>
-                        <TableCell>{proposal.capacity}</TableCell>
+                        <TableCell>Quantity</TableCell>
+                        <TableCell>{proposal.quantity}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Quoted Value</TableCell>
-                        <TableCell>{proposal.quotedValue}</TableCell>
+                        <TableCell>Current Status</TableCell>
+                        <TableCell>{proposal.currentStatus}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Quoted Margin Value</TableCell>
-                        <TableCell>{proposal.quotedMarginValue}</TableCell>
+                        <TableCell>Action Plan</TableCell>
+                        <TableCell>{proposal.actionPlan}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Remark</TableCell>
-                        <TableCell>{proposal.remark}</TableCell>
+                        <TableCell>Remarks</TableCell>
+                        <TableCell>{proposal.remarks}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Margin Percentage</TableCell>
+                        <TableCell>{proposal.marginPercentage}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
                 </Grid>
               </Grid>
-              <Button sx={{ margin: '20px' }} onClick={() => handleViewClient(proposal.clientId)}>View Client</Button>
+              <Button sx={{ margin: '20px' }} onClick={() => handleViewClient(proposal.clientId)} variant='contained'>View Client</Button>
+              <Button sx={{ margin: '20px' }} onClick={() => handleViewVendor(proposal.vendorId)} variant='contained'>View Vendor</Button>
             </CardContent>
           </Card>
         </Grid>
