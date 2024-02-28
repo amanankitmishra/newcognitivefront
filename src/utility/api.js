@@ -384,4 +384,26 @@ export const addRevisionToTradingProposal = (id, formData) => {
   return instance.post(`/tradingProposalAddRevision/${id}`, formData)
 }
 
+// trading sales order
+
+export const fetchTradingSalesOrder = () => {
+  return instance.get('/tradingSalesOrders')
+}
+
+export const createTradingSalesOrder = formData => {
+  return instance.post('tradingSalesOrders', formData)
+}
+
+export const fetchTradingSalesOrderById = id => {
+  return instance.get(`/tradingSalesOrders/${id}`)
+}
+
+export const editTradingSalesOrder = (id, formData) => {
+  return instance.patch(`/tradingSalesOrders/${id}`, formData)
+}
+
+export const deleteTradingSalesOrder = id => {
+  return instance.delete(`/tradingSalesOrders/${id}`)
+}
+
 export default instance

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import { Typography } from '@mui/material';
-import { MenuItem } from '@mui/material';
-import { getClientList } from 'src/utility/api';
+import React, { useState, useEffect } from 'react'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import { Typography } from '@mui/material'
+import { MenuItem } from '@mui/material'
+import { getClientList } from 'src/utility/api'
 
 const EditProposalForm = ({ data, onSubmit, onCancel }) => {
   const initialFormData = {
@@ -18,10 +18,10 @@ const EditProposalForm = ({ data, onSubmit, onCancel }) => {
     quotedMarginPercentage: '',
     quotedMarginValue: '',
     ratePerWatt: '',
-    remark: '',
+    remark: ''
   }
 
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState(initialFormData)
   const [clientList, setClientList] = useState([])
 
   const fetchClientList = async () => {
@@ -33,7 +33,6 @@ const EditProposalForm = ({ data, onSubmit, onCancel }) => {
     fetchClientList()
     if (data) {
       setFormData({
-
         clientId: data.clientId || '',
         status: data.status || '',
         project: data.project || '',
@@ -44,54 +43,55 @@ const EditProposalForm = ({ data, onSubmit, onCancel }) => {
         quotedMarginPercentage: data.quotedMarginPercentage || '',
         quotedMarginValue: data.quotedMarginValue || '',
         ratePerWatt: data.ratePerWatt || '',
-        remark: data.remark || '',
+        remark: data.remark || ''
       })
     }
   }, [data])
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
+  const handleChange = e => {
+    const { name, value } = e.target
+    setFormData(prevData => ({
       ...prevData,
-      [name]: value,
-    }));
+      [name]: value
+    }))
     if (name === 'quotedMarginValue' || name === 'quotedValue') {
-      const quotedMarginValue = parseFloat(formData.quotedMarginValue) || 0;
-      const quotedValue = parseFloat(formData.quotedValue) || 1;
+      const quotedMarginValue = parseFloat(formData.quotedMarginValue) || 0
+      const quotedValue = parseFloat(formData.quotedValue) || 1
 
-      const calculatedQuotedMarginPercentage = (quotedMarginValue / quotedValue) * 100;
+      const calculatedQuotedMarginPercentage = (quotedMarginValue / quotedValue) * 100
 
-      setFormData((prevData) => ({
+      setFormData(prevData => ({
         ...prevData,
-        quotedMarginPercentage: isNaN(calculatedQuotedMarginPercentage) ? '' : calculatedQuotedMarginPercentage.toFixed(2),
-      }));
+        quotedMarginPercentage: isNaN(calculatedQuotedMarginPercentage)
+          ? ''
+          : calculatedQuotedMarginPercentage.toFixed(2)
+      }))
     }
-  };
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(data._id, formData);
-  };
+  const handleSubmit = e => {
+    e.preventDefault()
+    onSubmit(data._id, formData)
+  }
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container spacing={2} maxWidth="sm">
+      <Grid container spacing={2} maxWidth='sm'>
         <Grid item xs={12} sx={{ pb: 2 }}>
-          <Typography variant="h5">Edit New Proposal</Typography>
+          <Typography variant='h5'>Edit Proposal</Typography>
         </Grid>
-
 
         <Grid item xs={6}>
           <TextField
-            label="Client"
+            label='Client'
             select
             fullWidth
-            name="clientId"
+            name='clientId'
             value={formData.clientId}
             onChange={handleChange}
             required
           >
-            {clientList.map((client) => (
+            {clientList.map(client => (
               <MenuItem key={client._id} value={client._id}>
                 {client.clientName}
               </MenuItem>
@@ -101,94 +101,132 @@ const EditProposalForm = ({ data, onSubmit, onCancel }) => {
 
         <Grid item xs={6}>
           <TextField
-            label="Status"
-            name="status"
+            label='Status'
+            name='status'
             value={formData.status}
             onChange={handleChange}
             fullWidth
             required
             select
           >
-            <MenuItem key={1} value="LIVE">LIVE</MenuItem>
-            <MenuItem key={2} value="LIVE-HOT">LIVE HOT</MenuItem>
-            <MenuItem key={3} value="CONSULTANT">CONSULTANT</MenuItem>
-            <MenuItem key={4} value="CONTRACTOR">CONTRACTOR</MenuItem>
+            <MenuItem key={1} value='LIVE'>
+              LIVE
+            </MenuItem>
+            <MenuItem key={2} value='LIVE-HOT'>
+              LIVE HOT
+            </MenuItem>
+            <MenuItem key={3} value='CONSULTANT'>
+              CONSULTANT
+            </MenuItem>
+            <MenuItem key={4} value='CONTRACTOR'>
+              CONTRACTOR
+            </MenuItem>
           </TextField>
         </Grid>
 
-
-
         <Grid item xs={6}>
           <TextField
-            label="Project Type"
-            name="projectType"
+            label='Project Type'
+            name='projectType'
             value={formData.projectType}
             onChange={handleChange}
             fullWidth
             required
             select
           >
-            <MenuItem key={1} value="SPV">SPV</MenuItem>
-            <MenuItem key={2} value="SWH">SWH</MenuItem>
+            <MenuItem key={1} value='SPV'>
+              SPV
+            </MenuItem>
+            <MenuItem key={2} value='SWH'>
+              SWH
+            </MenuItem>
           </TextField>
         </Grid>
 
         <Grid item xs={6}>
-          <TextField label="Project" name="project" value={formData.project} onChange={handleChange} fullWidth required />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField label="Capacity" name="capacity" value={formData.capacity} onChange={handleChange} fullWidth />
-        </Grid>
-        <Grid item xs={6}>
           <TextField
-            label="UOM"
-            name="uom"
-            value={formData.uom}
+            label='Project'
+            name='project'
+            value={formData.project}
             onChange={handleChange}
             fullWidth
             required
-            select
-          >
-            <MenuItem key={1} value="KWP">KWP</MenuItem>
-            <MenuItem key={2} value="LPD">LPD</MenuItem>
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField label='Capacity' name='capacity' value={formData.capacity} onChange={handleChange} fullWidth />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField label='UOM' name='uom' value={formData.uom} onChange={handleChange} fullWidth required select>
+            <MenuItem key={1} value='KWP'>
+              KWP
+            </MenuItem>
+            <MenuItem key={2} value='LPD'>
+              LPD
+            </MenuItem>
           </TextField>
         </Grid>
         <Grid item xs={6}>
-          <TextField label="Quoted Value" name="quotedValue" value={formData.quotedValue} onChange={handleChange} fullWidth />
+          <TextField
+            label='Quoted Value'
+            name='quotedValue'
+            value={formData.quotedValue}
+            onChange={handleChange}
+            fullWidth
+          />
         </Grid>
         <Grid item xs={6}>
-          <TextField label="Quoted Margin Value" name="quotedMarginValue" value={formData.quotedMarginValue} onChange={handleChange} fullWidth />
+          <TextField
+            label='Quoted Margin Value'
+            name='quotedMarginValue'
+            value={formData.quotedMarginValue}
+            onChange={handleChange}
+            fullWidth
+          />
         </Grid>
         <Grid item xs={6}>
-          <TextField disabled label="Quoted Margin Percentage" name="quotedMarginPercentage" value={formData.quotedMarginPercentage} onChange={handleChange} fullWidth />
+          <TextField
+            disabled
+            label='Quoted Margin Percentage'
+            name='quotedMarginPercentage'
+            value={formData.quotedMarginPercentage}
+            onChange={handleChange}
+            fullWidth
+          />
         </Grid>
         <Grid item xs={6}>
-          <TextField label="Rate Per Watt" name="ratePerWatt" value={formData.ratePerWatt} onChange={handleChange} fullWidth />
+          <TextField
+            label='Rate Per Watt'
+            name='ratePerWatt'
+            value={formData.ratePerWatt}
+            onChange={handleChange}
+            fullWidth
+          />
         </Grid>
         <Grid item xs={6}>
-          <TextField label="Remark" name="remark" value={formData.remark} onChange={handleChange} fullWidth multiline />
+          <TextField label='Remark' name='remark' value={formData.remark} onChange={handleChange} fullWidth multiline />
         </Grid>
       </Grid>
 
-      <Grid container sx={{ marginTop: 2 }} spacing={2} justifyContent="flex-end">
+      <Grid container sx={{ marginTop: 2 }} spacing={2} justifyContent='flex-end'>
         <Grid item>
-          <Button type="submit" variant="contained" color="primary">
+          <Button type='submit' variant='contained' color='primary'>
             Add
           </Button>
         </Grid>
         <Grid item>
-          <Button type="button" onClick={onCancel} variant="outlined">
+          <Button type='button' onClick={onCancel} variant='outlined'>
             Cancel
           </Button>
         </Grid>
       </Grid>
     </form>
-  );
-};
+  )
+}
 
 EditProposalForm.acl = {
   action: 'read',
   subject: 'proposal'
 }
 
-export default EditProposalForm;
+export default EditProposalForm

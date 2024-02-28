@@ -110,6 +110,27 @@ const navigation = () => {
               path: '/trading-proposals',
               action: 'read',
               subject: 'proposal'
+            },
+            {
+              title: 'Live',
+              icon: 'tabler:fidget-spinner',
+              path: '/trading-proposals/live',
+              action: 'read',
+              subject: 'proposal'
+            },
+            {
+              title: 'Live Hot',
+              icon: 'tabler:fidget-spinner',
+              path: '/trading-proposals/live-hot',
+              action: 'read',
+              subject: 'proposal'
+            },
+            {
+              title: 'Budgetory Contractors',
+              icon: 'tabler:fidget-spinner',
+              path: '/trading-proposals/budgetory-contractors',
+              action: 'read',
+              subject: 'proposal'
             }
           ]
         }
@@ -117,10 +138,23 @@ const navigation = () => {
     },
     {
       title: 'Sales Order',
-      path: '/sales-order',
       icon: 'tabler:report-money',
-      action: 'read',
-      subject: 'salesorder'
+      children: [
+        {
+          title: 'Solar',
+          icon: 'tabler:report-money',
+          path: '/sales-order',
+          action: 'read',
+          subject: 'salesorder'
+        },
+        {
+          title: 'Trading',
+          icon: 'tabler:report-money',
+          path: '/trading-sales-order',
+          action: 'read',
+          subject: 'salesorder'
+        }
+      ]
     },
     {
       title: 'BOQ',
