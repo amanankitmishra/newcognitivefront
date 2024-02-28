@@ -2,106 +2,34 @@ import React, { useState, useEffect } from 'react'
 import { Grid, Typography, Container, Button } from '@mui/material'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import Sidebar from 'src/@core/components/sidebar'
-import ClientForm from './AddClientForm'
 import { Card, CardHeader, CardContent } from '@mui/material'
 import { IconDotsVertical, IconEye, IconX } from '@tabler/icons-react'
+import VendorForm from './AddVendorForm'
 import Link from 'next/link'
 import Router from 'next/router'
-import { fetchClients, createClient, deleteClient } from 'src/utility/api'
+import { fetchVendors, createVendor, deleteVendor } from 'src/utility/api'
 import { formatTimestamp } from 'src/utility/utility'
 import toast from 'react-hot-toast'
 import ConfirmationDialog from 'src/utility/confirmation'
 
-const ClientsMain = () => {
+const VendorsMain = () => {
+  const [vendors, setVendors] = useState([])
   const [open, setOpen] = useState(false)
-  const [clients, setClients] = useState([])
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [deleteClientId, setDeleteClientId] = useState(null)
-
-  const fetchClientsData = async () => {
-    try {
-      const clientsDataFromServer = await fetchClients()
-
-      const clientsDataWithId = clientsDataFromServer.data.allClients.map(row => ({
-        ...row,
-        id: row._id,
-        nature: row.nature.toUpperCase()
-      }))
-
-      setClients(clientsDataWithId)
-    } catch (error) {
-      console.error('Error fetching clients:', error)
-    }
-  }
-
-  useEffect(() => {
-    fetchClientsData()
-  }, [])
+  const [deleteVendorId, setDeleteVendorId] = useState(null)
 
   const toggleSidebar = () => {
     setOpen(!open)
   }
 
-  const handleAddClient = async formData => {
-    try {
-      const response = await createClient(formData)
-      if (response.status === 201) {
-        // Show success notification
-
-        toast.success('Client added successfully', { duration: 3000 })
-        fetchClientsData()
-      } else {
-        // Show error notification
-        toast.error('Error adding client', { duration: 3000 })
-      }
-    } catch (error) {
-      console.error('Error adding client:', error)
-      toast.error('Error adding client', { duration: 3000 })
-    }
-
-    // Close the sidebar in both success and error cases
-    setOpen(false)
-  }
-
-  const handleCancel = () => {
-    setOpen(false)
-  }
-
-  const handleViewClient = clientId => {
-    Router.push(`/clients/view?id=${clientId}`)
-  }
-
-  const handleDelete = id => {
-    setDeleteClientId(id)
-    setConfirmationDialogOpen(true)
-  }
-
-  const handleConfirmationDialogClose = () => {
-    setConfirmationDialogOpen(false)
-  }
-
-  const handleConfirmationDialogConfirm = async () => {
-    try {
-      // console.log(deleteEnquiryId)
-      await deleteClient(deleteClientId)
-      toast.success('Client deleted successfully', { duration: 3000 })
-      fetchClientsData()
-    } catch {
-      toast.error('Error deleting client', { duration: 3000 })
-    } finally {
-      setConfirmationDialogOpen(false)
-    }
-  }
-
   const columns = [
     { field: 'id', headerName: 'ID', flex: 1 },
-    { field: 'clientName', headerName: 'Client Name', flex: 1 },
+    { field: 'vendorName', headerName: 'Vendor Name', flex: 1 },
     {
       field: 'officeAddress',
       headerName: 'Office Address',
       flex: 1
     },
-    { field: 'nature', headerName: 'Nature Of Client', flex: 1 },
     { field: 'city', headerName: 'City', flex: 1 },
     { field: 'state', headerName: 'State', flex: 1 },
     {
@@ -124,7 +52,7 @@ const ClientsMain = () => {
             }}
             onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.2)')}
             onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
-            onClick={() => handleViewClient(params.row.id)}
+            onClick={() => handleViewVendor(params.row.id)}
           >
             <IconEye />
           </div>
@@ -150,21 +78,86 @@ const ClientsMain = () => {
     }
   ]
 
+  const getAllVendors = async () => {
+    const response = await fetchVendors()
+
+    const ccc = response.data.allVendors.map(row => ({
+      ...row,
+      id: row._id
+    }))
+    setVendors(ccc)
+  }
+
+  const handleAddVendor = async formData => {
+    try {
+      const response = await createVendor(formData)
+      if (response.status === 201) {
+        // Show success notification
+
+        toast.success('Vendor added successfully', { duration: 3000 })
+        getAllVendors()
+      } else {
+        // Show error notification
+        toast.error('Error adding vendor', { duration: 3000 })
+      }
+    } catch (error) {
+      console.error('Error adding vendor:', error)
+      toast.error('Error adding vendor', { duration: 3000 })
+    }
+
+    // Close the sidebar in both success and error cases
+    setOpen(false)
+  }
+
+  const handleCancel = () => {
+    setOpen(false)
+  }
+
+  const handleDelete = id => {
+    setDeleteVendorId(id)
+    setConfirmationDialogOpen(true)
+  }
+
+  const handleConfirmationDialogClose = () => {
+    setConfirmationDialogOpen(false)
+  }
+
+  const handleConfirmationDialogConfirm = async () => {
+    try {
+      // console.log(deleteEnquiryId)
+      await deleteVendor(deleteVendorId)
+      toast.success('Vendor deleted successfully', { duration: 3000 })
+      getAllVendors()
+    } catch {
+      toast.error('Error deleting vendor', { duration: 3000 })
+    } finally {
+      setConfirmationDialogOpen(false)
+    }
+  }
+
+  const handleViewVendor = vendorId => {
+    Router.push(`/vendors/view?id=${vendorId}`)
+  }
+
+  useEffect(() => {
+    getAllVendors()
+  }, [])
+
   return (
     <div>
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Clients 🚀'></CardHeader>
+            <CardHeader title='Vendors 🚀'></CardHeader>
             <CardContent>
               <div style={{ textAlign: 'right' }}>
                 <Button onClick={toggleSidebar} variant='contained' color='primary'>
-                  Add Client
+                  Add Vendor
                 </Button>
               </div>
               <div style={{ height: '400px', width: '100%' }}>
                 <DataGrid
-                  rows={clients}
+                  rows={vendors}
                   columns={columns}
                   initialState={{
                     columns: {
@@ -190,7 +183,7 @@ const ClientsMain = () => {
         </Grid>
       </Grid>
       <Sidebar show={open} sx={{ padding: 5 }}>
-        <ClientForm onSubmit={handleAddClient} onCancel={handleCancel} />
+        <VendorForm onSubmit={handleAddVendor} onCancel={handleCancel} />
       </Sidebar>
       <ConfirmationDialog
         open={confirmationDialogOpen}
@@ -201,9 +194,9 @@ const ClientsMain = () => {
   )
 }
 
-ClientsMain.acl = {
+VendorsMain.acl = {
   action: 'read',
-  subject: 'client'
+  subject: 'vendor'
 }
 
-export default ClientsMain
+export default VendorsMain

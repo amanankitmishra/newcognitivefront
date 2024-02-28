@@ -9,16 +9,17 @@ import Sidebar from 'src/@core/components/sidebar'
 import { Button } from '@mui/material'
 import AddEnquiryForm from './AddEnquiriesForm'
 import EditEnquiryForm from './EditEnquiryForm'
-import { createEnquiry, fetchEnquiries, editEnquiry, deleteEnquiry } from 'src/utility/api'
+import { createTradingEnquiry, fetchTradingEnquiries, editTradingEnquiry, deleteTradingEnquiry } from 'src/utility/api'
 import toast from 'react-hot-toast'
 import Router from 'next/router'
 import { formatTimestamp } from 'src/utility/utility'
 import { IconEdit, IconEye, IconX } from '@tabler/icons-react'
 import ConfirmationDialog from 'src/utility/confirmation'
 
-const Enquiries = () => {
+const TradingEnquiries = () => {
   const columns = [
     { field: 'id', headerName: 'S.No.', flex: 1 },
+    { field: 'quotationNumber', headerName: 'Quotation Number', flex: 1 },
     {
       field: 'clientName',
       headerName: 'Client',
@@ -41,8 +42,6 @@ const Enquiries = () => {
       )
     },
     { field: 'project', headerName: 'Project', flex: 1 },
-    { field: 'projectType', headerName: 'Type', flex: 1 },
-    { field: 'uom', headerName: 'UOM', flex: 1 },
     { field: 'offerSubmitted', headerName: 'Offer Submitted', flex: 1 },
     { field: 'enquiryDate', headerName: 'Enquiry Date', flex: 1 },
     { field: 'remark', headerName: 'Remark', flex: 1 },
@@ -110,7 +109,7 @@ const Enquiries = () => {
 
   const getEnquiries = async () => {
     try {
-      const res = await fetchEnquiries()
+      const res = await fetchTradingEnquiries()
 
       const ccc = res.data.map(row => ({
         ...row,
@@ -133,7 +132,7 @@ const Enquiries = () => {
 
   const handleAddEnquiry = async formData => {
     try {
-      const response = createEnquiry(formData)
+      const response = await createTradingEnquiry(formData)
       toast.success('Enquiry Created Successfully', { duration: 3000 })
       await getEnquiries()
     } catch {
@@ -152,7 +151,7 @@ const Enquiries = () => {
   }
 
   const handleViewEnquiry = id => {
-    Router.push(`/enquiries/view?id=${id}`)
+    Router.push(`/trading-enquiries/view?id=${id}`)
   }
 
   const handleDelete = id => {
@@ -167,7 +166,7 @@ const Enquiries = () => {
   const handleConfirmationDialogConfirm = async () => {
     try {
       // console.log(deleteEnquiryId)
-      await deleteEnquiry(deleteEnquiryId)
+      await deleteTradingEnquiry(deleteEnquiryId)
       toast.success('Enquiry deleted successfully', { duration: 3000 })
       getEnquiries()
     } catch {
@@ -183,7 +182,7 @@ const Enquiries = () => {
 
   const handleEditSubmit = async (id, editedData) => {
     try {
-      const response = await editEnquiry(id, editedData)
+      const response = await editTradingEnquiry(id, editedData)
 
       toast.success('Enquiry Updated successfully', { duration: 3000 })
     } catch {
@@ -276,9 +275,9 @@ const Enquiries = () => {
   )
 }
 
-Enquiries.acl = {
+TradingEnquiries.acl = {
   action: 'read',
   subject: 'enquiry'
 }
 
-export default Enquiries
+export default TradingEnquiries

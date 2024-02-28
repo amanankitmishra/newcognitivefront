@@ -15,6 +15,20 @@ const navigation = () => {
       subject: 'client'
     },
     {
+      title: 'Products',
+      path: '/products',
+      icon: 'tabler:building-store',
+      action: 'read',
+      subject: 'product'
+    },
+    {
+      title: 'Vendors',
+      path: '/vendors',
+      icon: 'tabler:building-warehouse',
+      action: 'read',
+      subject: 'vendor'
+    },
+    {
       title: 'Opportunity Leads',
       path: '/oleads',
       icon: 'tabler:loader-quarter',
@@ -23,58 +37,124 @@ const navigation = () => {
     },
     {
       title: 'Enquiries',
-      path: '/enquiries',
       icon: 'tabler:loader-2',
-      action: 'read',
-      subject: 'enquiry'
+      children: [
+        {
+          title: 'Solar',
+          icon: 'tabler:loader-2',
+          path: '/enquiries',
+          action: 'read',
+          subject: 'enquiry'
+        },
+        {
+          title: 'Trading',
+          icon: 'tabler:loader-2',
+          path: '/trading-enquiries',
+          action: 'read',
+          subject: 'trading-enquiries'
+        }
+      ]
     },
     {
       title: 'Proposals',
       icon: 'tabler:fidget-spinner',
       children: [
         {
-          title: 'All',
+          title: 'Solar',
           icon: 'tabler:fidget-spinner',
-          path: '/proposals',
-          action: 'read',
-          subject: 'proposal'
+          children: [
+            {
+              title: 'All',
+              icon: 'tabler:fidget-spinner',
+              path: '/proposals',
+              action: 'read',
+              subject: 'proposal'
+            },
+            {
+              title: 'Live',
+              icon: 'tabler:fidget-spinner',
+              path: '/proposals/live',
+              action: 'read',
+              subject: 'proposal'
+            },
+            {
+              title: 'Live Hot',
+              icon: 'tabler:fidget-spinner',
+              path: '/proposals/live-hot',
+              action: 'read',
+              subject: 'proposal'
+            },
+            {
+              title: 'Budgetory Consultants',
+              icon: 'tabler:fidget-spinner',
+              path: '/proposals/budgetory-consultants',
+              action: 'read',
+              subject: 'proposal'
+            },
+            {
+              title: 'Budgetory Contractors',
+              icon: 'tabler:fidget-spinner',
+              path: '/proposals/budgetory-contractors',
+              action: 'read',
+              subject: 'proposal'
+            }
+          ]
         },
         {
-          title: 'Live',
+          title: 'Trading',
           icon: 'tabler:fidget-spinner',
-          path: '/proposals/live',
-          action: 'read',
-          subject: 'proposal'
-        },
-        {
-          title: 'Live Hot',
-          icon: 'tabler:fidget-spinner',
-          path: '/proposals/live-hot',
-          action: 'read',
-          subject: 'proposal'
-        },
-        {
-          title: 'Budgetory Consultants',
-          icon: 'tabler:fidget-spinner',
-          path: '/proposals/budgetory-consultants',
-          action: 'read',
-          subject: 'proposal'
-        },
-        {
-          title: 'Budgetory Contractors',
-          icon: 'tabler:fidget-spinner',
-          path: '/proposals/budgetory-contractors',
-          action: 'read',
-          subject: 'proposal'
-        },
+          children: [
+            {
+              title: 'All',
+              icon: 'tabler:fidget-spinner',
+              path: '/trading-proposals',
+              action: 'read',
+              subject: 'proposal'
+            },
+            {
+              title: 'Live',
+              icon: 'tabler:fidget-spinner',
+              path: '/trading-proposals/live',
+              action: 'read',
+              subject: 'proposal'
+            },
+            {
+              title: 'Live Hot',
+              icon: 'tabler:fidget-spinner',
+              path: '/trading-proposals/live-hot',
+              action: 'read',
+              subject: 'proposal'
+            },
+            {
+              title: 'Budgetory Contractors',
+              icon: 'tabler:fidget-spinner',
+              path: '/trading-proposals/budgetory-contractors',
+              action: 'read',
+              subject: 'proposal'
+            }
+          ]
+        }
       ]
     },
     {
       title: 'Sales Order',
-      path: '/sales-order',
       icon: 'tabler:report-money',
-      action: 'read',
-      subject: 'salesorder'
+      children: [
+        {
+          title: 'Solar',
+          icon: 'tabler:report-money',
+          path: '/sales-order',
+          action: 'read',
+          subject: 'salesorder'
+        },
+        {
+          title: 'Trading',
+          icon: 'tabler:report-money',
+          path: '/trading-sales-order',
+          action: 'read',
+          subject: 'salesorder'
+        }
+      ]
     },
     {
       title: 'BOQ',
@@ -86,7 +166,7 @@ const navigation = () => {
     {
       title: 'Users',
       path: '/users',
-      icon: 'tabler:book-2',
+      icon: 'tabler:users-plus',
       action: 'read',
       subject: 'user'
     },
@@ -104,6 +184,13 @@ const navigation = () => {
       action: 'read',
       subject: 'calendar'
     },
+    {
+      title: 'Settings',
+      path: '/settings',
+      icon: 'tabler:settings',
+      action: 'manage',
+      subject: 'settings'
+    }
   ]
 }
 

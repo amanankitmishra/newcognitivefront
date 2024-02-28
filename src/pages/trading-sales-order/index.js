@@ -1,3 +1,4 @@
+// Import necessary dependencies
 import React, { useState, useEffect } from 'react'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
@@ -7,21 +8,85 @@ import CardContent from '@mui/material/CardContent'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import Sidebar from 'src/@core/components/sidebar'
 import { Button } from '@mui/material'
-import AddEnquiryForm from './AddEnquiriesForm'
-import EditEnquiryForm from './EditEnquiryForm'
-import { createEnquiry, fetchEnquiries, editEnquiry, deleteEnquiry } from 'src/utility/api'
+import AddSalesOrderForm from './AddSalesOrderForm'
+import {
+  createTradingSalesOrder,
+  fetchTradingSalesOrder,
+  editTradingSalesOrder,
+  deleteTradingSalesOrder
+} from 'src/utility/api'
 import toast from 'react-hot-toast'
 import Router from 'next/router'
-import { formatTimestamp } from 'src/utility/utility'
-import { IconEdit, IconEye, IconX } from '@tabler/icons-react'
+import { IconEye, IconEdit, IconX } from '@tabler/icons-react'
+import EditSalesOrderForm from './EditSalesOrderForm'
 import ConfirmationDialog from 'src/utility/confirmation'
 
-const Enquiries = () => {
+const TradingSalesOrder = () => {
+  const [salesOrders, setSalesOrder] = useState([])
+  const [editOpen, setEditOpen] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [deleteSalesOrderId, setDeleteSalesorderId] = useState(null)
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [selectedRowData, setSelectedRowData] = useState(null)
+
+  const toggleSidebar = () => setOpen(!open)
+
+  const handleViewClient = clientId => {
+    Router.push(`/clients/view?id=${clientId}`)
+  }
+
+  const handleViewSalesOrder = clientId => {
+    Router.push(`/trading-sales-order/view?id=${clientId}`)
+  }
+
+  const handleEditCancel = () => {
+    setEditOpen(false)
+  }
+
+  const handleEdit = rowData => {
+    setSelectedRowData(rowData)
+    setEditOpen(true)
+  }
+
+  const handleEditSalesOrder = async (id, editedData) => {
+    try {
+      const response = await editTradingSalesOrder(id, editedData)
+
+      toast.success('Sales Order Updated successfully', { duration: 3000 })
+    } catch {
+      toast.error('Error in updating Sales Order', { duration: 3000 })
+    }
+
+    // Close the edit modal
+    setEditOpen(false)
+    getSalesOrder()
+  }
+
+  const handleDelete = id => {
+    setDeleteSalesorderId(id)
+    setConfirmationDialogOpen(true)
+  }
+
+  const handleConfirmationDialogClose = () => {
+    setConfirmationDialogOpen(false)
+  }
+
+  const handleConfirmationDialogConfirm = async () => {
+    try {
+      await deleteTradingSalesOrder(deleteProposalId)
+      toast.success('Sales Order deleted successfully', { duration: 3000 })
+    } catch {
+      toast.error('Error deleting Sales order', { duration: 3000 })
+    } finally {
+      getSalesOrder()
+      setConfirmationDialogOpen(false)
+    }
+  }
+
   const columns = [
-    { field: 'id', headerName: 'S.No.', flex: 1 },
     {
       field: 'clientName',
-      headerName: 'Client',
+      headerName: 'Client Name',
       flex: 1,
       renderCell: params => (
         <div
@@ -40,12 +105,41 @@ const Enquiries = () => {
         </div>
       )
     },
-    { field: 'project', headerName: 'Project', flex: 1 },
-    { field: 'projectType', headerName: 'Type', flex: 1 },
-    { field: 'uom', headerName: 'UOM', flex: 1 },
-    { field: 'offerSubmitted', headerName: 'Offer Submitted', flex: 1 },
-    { field: 'enquiryDate', headerName: 'Enquiry Date', flex: 1 },
-    { field: 'remark', headerName: 'Remark', flex: 1 },
+    {
+      field: 'project',
+      headerName: 'Project',
+      flex: 1
+    },
+    {
+      field: 'siteLocation', // Add this line for siteLocation
+      headerName: 'Site Location',
+      flex: 1
+    },
+    {
+      field: 'orderStatus',
+      headerName: 'Order Status',
+      flex: 1
+    },
+    {
+      field: 'fy',
+      headerName: 'FY',
+      flex: 1
+    },
+    {
+      field: 'paymentStage',
+      headerName: 'Payment Stage',
+      flex: 1
+    },
+    {
+      field: 'creditAmount',
+      headerName: 'Credit Amount',
+      flex: 1
+    },
+    {
+      field: 'remark',
+      headerName: 'Remark',
+      flex: 1
+    },
     {
       field: 'actions',
       headerName: 'Actions',
@@ -62,7 +156,7 @@ const Enquiries = () => {
             }}
             onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.2)')}
             onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
-            onClick={() => handleViewEnquiry(params.row.id)}
+            onClick={() => handleViewSalesOrder(params.row.id)}
           >
             <IconEye />
           </div>
@@ -101,44 +195,30 @@ const Enquiries = () => {
     }
   ]
 
-  const [open, setOpen] = useState(false)
-  const [enquiries, setEnquiries] = useState([])
-  const [editModalOpen, setEditModalOpen] = useState(false)
-  const [selectedRowData, setSelectedRowData] = useState(null)
-  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [deleteEnquiryId, setDeleteEnquiryId] = useState(null)
+  const getSalesOrder = async () => {
+    const res = await fetchTradingSalesOrder()
 
-  const getEnquiries = async () => {
-    try {
-      const res = await fetchEnquiries()
-
-      const ccc = res.data.map(row => ({
-        ...row,
-        id: row._id,
-        clientId: row.clientId._id,
-        clientName: row.clientId.clientName,
-        enquiryDate: formatTimestamp(row.enquiryDate)
-      }))
-      setEnquiries(ccc)
-    } catch (e) {
-      console.log(e)
-    }
+    const ccc = res.data.map(row => ({
+      ...row,
+      id: row._id,
+      clientId: row.clientId._id,
+      clientName: row.clientId.clientName
+    }))
+    setSalesOrder(ccc)
   }
 
   useEffect(() => {
-    getEnquiries()
+    getSalesOrder()
   }, [])
 
-  const toggleSidebar = () => setOpen(!open)
-
-  const handleAddEnquiry = async formData => {
+  const handleAddSalesOrder = async formData => {
     try {
-      const response = createEnquiry(formData)
-      toast.success('Enquiry Created Successfully', { duration: 3000 })
-      await getEnquiries()
+      const res = await createTradingSalesOrder(formData)
+      toast.success('Sales Order Added Successfully.', { duration: 3000 })
     } catch {
-      toast.error('Error Creating Enquiry', { duration: 3000 })
+      toast.error('Error creating Sales Order', { duration: 3000 })
     }
+    getSalesOrder()
     setOpen(false)
   }
 
@@ -146,93 +226,26 @@ const Enquiries = () => {
     setOpen(false)
   }
 
-  const handleEdit = rowData => {
-    setSelectedRowData(rowData)
-    setEditModalOpen(true)
-  }
-
-  const handleViewEnquiry = id => {
-    Router.push(`/enquiries/view?id=${id}`)
-  }
-
-  const handleDelete = id => {
-    setDeleteEnquiryId(id)
-    setConfirmationDialogOpen(true)
-  }
-
-  const handleConfirmationDialogClose = () => {
-    setConfirmationDialogOpen(false)
-  }
-
-  const handleConfirmationDialogConfirm = async () => {
-    try {
-      // console.log(deleteEnquiryId)
-      await deleteEnquiry(deleteEnquiryId)
-      toast.success('Enquiry deleted successfully', { duration: 3000 })
-      getEnquiries()
-    } catch {
-      toast.error('Error deleting enquiry', { duration: 3000 })
-    } finally {
-      setConfirmationDialogOpen(false)
-    }
-  }
-
-  const handleEditModalClose = () => {
-    setEditModalOpen(false)
-  }
-
-  const handleEditSubmit = async (id, editedData) => {
-    try {
-      const response = await editEnquiry(id, editedData)
-
-      toast.success('Enquiry Updated successfully', { duration: 3000 })
-    } catch {
-      toast.error('Error in updating Enquiry', { duration: 3000 })
-    }
-
-    // Close the edit modal
-    setEditModalOpen(false)
-    getEnquiries()
-  }
-
-  const handleViewClient = clientId => {
-    Router.push(`/clients/view?id=${clientId}`)
-  }
-
-  const getRowId = row => row.id
-
-  const getRowClassName = params => {
-    const offerSubmitted = params.row.offerSubmitted
-
-    // return status ? 'activeRow' : 'inactiveRow';
-    if (offerSubmitted === 'YES') {
-      return 'activeRow'
-    }
-  }
-
   return (
     <div>
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Enquiries 📋'></CardHeader>
+            <CardHeader title='Sales Orders 📑'></CardHeader>
             <CardContent>
               <div style={{ textAlign: 'right' }}>
                 <Button onClick={toggleSidebar} variant='contained' color='primary'>
-                  Add Enquiry
+                  Add Sales Order
                 </Button>
               </div>
               <div style={{ height: '400px' }}>
                 <DataGrid
-                  rows={enquiries}
+                  rows={salesOrders}
                   columns={columns}
                   initialState={{
                     columns: {
                       columnVisibilityModel: {
-                        id: false,
-                        enquiryDate: false,
-                        quotedMarginValue: false,
-                        ratePerWatt: false
+                        id: false
                       }
                     },
                     pagination: {
@@ -243,8 +256,6 @@ const Enquiries = () => {
                   }}
                   pageSizeOptions={[5, 10, 20]}
                   slots={{ toolbar: GridToolbar }}
-                  getRowId={getRowId}
-                  getRowClassName={getRowClassName}
                 />
               </div>
             </CardContent>
@@ -257,15 +268,10 @@ const Enquiries = () => {
           padding: 5
         }}
       >
-        <AddEnquiryForm onSubmit={handleAddEnquiry} onCancel={handleCancel} />
+        <AddSalesOrderForm onSubmit={handleAddSalesOrder} onCancel={handleCancel} />
       </Sidebar>
-      <Sidebar
-        show={editModalOpen}
-        sx={{
-          padding: 5
-        }}
-      >
-        <EditEnquiryForm data={selectedRowData} onSubmit={handleEditSubmit} onCancel={handleEditModalClose} />
+      <Sidebar show={editOpen} sx={{ padding: 5 }}>
+        <EditSalesOrderForm data={selectedRowData} onSubmit={handleEditSalesOrder} onCancel={handleEditCancel} />
       </Sidebar>
       <ConfirmationDialog
         open={confirmationDialogOpen}
@@ -276,9 +282,9 @@ const Enquiries = () => {
   )
 }
 
-Enquiries.acl = {
+TradingSalesOrder.acl = {
   action: 'read',
-  subject: 'enquiry'
+  subject: 'salesorder'
 }
 
-export default Enquiries
+export default TradingSalesOrder
