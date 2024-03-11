@@ -7,8 +7,16 @@ const Settings = () => {
     Router.push(`/settings/trading-enquiry`)
   }
 
+  const enquiry = () => {
+    Router.push(`/settings/enquiry`)
+  }
+
   const tradingProposal = () => {
     Router.push(`/settings/trading-proposal`)
+  }
+
+  const proposal = () => {
+    Router.push(`/settings/proposal`)
   }
 
   return (
@@ -33,6 +41,12 @@ const Settings = () => {
                 sx={{ display: 'block', margin: '10px' }}
               >
                 Trading Proposal Sequence
+              </Button>
+              <Button onClick={enquiry} color='primary' variant='contained' sx={{ display: 'block', margin: '10px' }}>
+                Enquiry Sequence
+              </Button>
+              <Button onClick={proposal} color='primary' variant='contained' sx={{ display: 'block', margin: '10px' }}>
+                Proposal Sequence
               </Button>
             </CardContent>
           </Card>

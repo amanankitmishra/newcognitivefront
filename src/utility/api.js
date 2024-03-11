@@ -292,6 +292,22 @@ export const getVendorList = () => {
 
 //Settings Routes
 
+export const fetchProposalNumbers = () => {
+  return instance.get('/proposalNumbers')
+}
+
+export const addProposalNumber = formData => {
+  return instance.post('/proposalNumber', formData)
+}
+
+export const markActiveProposalNumber = id => {
+  return instance.patch(`/proposalNumber/${id}`, { active: true })
+}
+
+export const deleteProposalNumber = id => {
+  return instance.delete(`/proposalNumber/${id}`)
+}
+
 export const fetchTradingProposalNumbers = () => {
   return instance.get('/tradingProposalNumbers')
 }
@@ -306,6 +322,22 @@ export const markActiveTradingProposalNumber = id => {
 
 export const deleteTradingProposalNumber = id => {
   return instance.delete(`/tradingProposalNumber/${id}`)
+}
+
+export const fetchEnquiryNumbers = () => {
+  return instance.get('/enquiryNumbers')
+}
+
+export const addEnquiryNumber = formData => {
+  return instance.post('/enquiryNumber', formData)
+}
+
+export const markActiveEnquiryNumber = id => {
+  return instance.patch(`/enquiryNumber/${id}`, { active: true })
+}
+
+export const deleteEnquiryNumber = id => {
+  return instance.delete(`/enquiryNumber/${id}`)
 }
 
 export const fetchTradingEnquiryNumbers = () => {

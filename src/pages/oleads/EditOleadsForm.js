@@ -1,14 +1,14 @@
 // EditOleadsForm.js
 
-import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import { Typography, MenuItem } from '@mui/material';
-import { getClientList } from 'src/utility/api';
+import React, { useState, useEffect } from 'react'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import { Typography, MenuItem } from '@mui/material'
+import { getClientList } from 'src/utility/api'
+import { formatDateForInput } from 'src/utility/utility'
 
 const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
-
   const [formData, setFormData] = useState({
     clientId: '',
     project: '',
@@ -17,22 +17,22 @@ const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
     oleadFor: '',
     enquiryExpectedBy: '',
     leadSource: '',
-    leadDate: '',
-  });
+    leadDate: ''
+  })
 
-  const [clientList, setClientList] = useState([]);
+  const [clientList, setClientList] = useState([])
 
   const fetchClientList = async () => {
     try {
-      const response = await getClientList();
-      setClientList(response.data);
+      const response = await getClientList()
+      setClientList(response.data)
     } catch (error) {
-      console.log('Error fetching client list:', error);
+      console.log('Error fetching client list:', error)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchClientList();
+    fetchClientList()
     if (data) {
       setFormData({
         clientId: data.clientId || '',
@@ -40,45 +40,45 @@ const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
         siteAddress: data.siteAddress || '',
         siteLocation: data.siteLocation || '',
         oleadFor: data.oleadFor || '',
-        enquiryExpectedBy: data.enquiryExpectedBy || '',
+        enquiryExpectedBy: formatDateForInput(data.enquiryExpectedBy) || '',
         leadSource: data.leadSource || '',
-        leadDate: data.leadDate || '',
-        remark: data.remark || '',
-      });
+        leadDate: formatDateForInput(data.leadDate) || '',
+        remark: data.remark || ''
+      })
     }
-  }, [data]);
+  }, [data])
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
+  const handleChange = e => {
+    const { name, value } = e.target
+    setFormData(prevData => ({
       ...prevData,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(data._id, formData);
-  };
+  const handleSubmit = e => {
+    e.preventDefault()
+    onSubmit(data._id, formData)
+  }
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container spacing={2} maxWidth="sm">
+      <Grid container spacing={2} maxWidth='sm'>
         <Grid item xs={12} sx={{ pb: 2 }}>
-          <Typography variant="h5">Edit Opportunity Lead</Typography>
+          <Typography variant='h5'>Edit Opportunity Lead</Typography>
         </Grid>
 
         <Grid item xs={6}>
           <TextField
-            label="Client"
+            label='Client'
             select
             fullWidth
-            name="clientId"
+            name='clientId'
             value={formData.clientId}
             onChange={handleChange}
             required
           >
-            {clientList.map((client) => (
+            {clientList.map(client => (
               <MenuItem key={client._id} value={client._id}>
                 {client.clientName}
               </MenuItem>
@@ -87,20 +87,14 @@ const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
         </Grid>
 
         <Grid item xs={6}>
-          <TextField
-            label="Project"
-            fullWidth
-            name="project"
-            value={formData.project}
-            onChange={handleChange}
-          />
+          <TextField label='Project' fullWidth name='project' value={formData.project} onChange={handleChange} />
         </Grid>
 
         <Grid item xs={6}>
           <TextField
-            label="Site Address"
+            label='Site Address'
             fullWidth
-            name="siteAddress"
+            name='siteAddress'
             value={formData.siteAddress}
             onChange={handleChange}
           />
@@ -108,9 +102,9 @@ const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
 
         <Grid item xs={6}>
           <TextField
-            label="Site Location"
+            label='Site Location'
             fullWidth
-            name="siteLocation"
+            name='siteLocation'
             value={formData.siteLocation}
             onChange={handleChange}
           />
@@ -118,9 +112,9 @@ const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
 
         <Grid item xs={6}>
           <TextField
-            label="Opportunity For"
+            label='Opportunity For'
             fullWidth
-            name="oleadFor"
+            name='oleadFor'
             value={formData.oleadFor}
             onChange={handleChange}
           />
@@ -128,23 +122,23 @@ const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
 
         <Grid item xs={6}>
           <TextField
-            label="Enquiry Expected By"
-            type="date"
+            label='Enquiry Expected By'
+            type='date'
             fullWidth
-            name="enquiryExpectedBy"
+            name='enquiryExpectedBy'
             value={formData.enquiryExpectedBy}
             onChange={handleChange}
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
           />
         </Grid>
 
         <Grid item xs={6}>
           <TextField
-            label="Lead Source"
+            label='Lead Source'
             fullWidth
-            name="leadSource"
+            name='leadSource'
             value={formData.leadSource}
             onChange={handleChange}
           />
@@ -152,47 +146,49 @@ const EditOleadsForm = ({ data, onSubmit, onCancel }) => {
 
         <Grid item xs={6}>
           <TextField
-            label="Lead Date"
-            type="date"
+            label='Lead Date'
+            type='date'
             fullWidth
-            name="leadDate"
-            defaultValue={formData.leadDate}
+            name='leadDate'
+            value={formData.leadDate}
             onChange={handleChange}
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
           />
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Remark"
+            label='Remark'
             fullWidth
-            name="remark"
+            multiline
+            maxRows={5}
+            name='remark'
             value={formData.remark}
             onChange={handleChange}
           />
         </Grid>
       </Grid>
 
-      <Grid container sx={{ marginTop: 2 }} spacing={2} justifyContent="flex-end">
+      <Grid container sx={{ marginTop: 2 }} spacing={2} justifyContent='flex-end'>
         <Grid item>
-          <Button type="submit" variant="contained" color="primary">
+          <Button type='submit' variant='contained' color='primary'>
             Update
           </Button>
         </Grid>
         <Grid item>
-          <Button type="button" onClick={onCancel} variant="outlined">
+          <Button type='button' onClick={onCancel} variant='outlined'>
             Cancel
           </Button>
         </Grid>
       </Grid>
     </form>
-  );
-};
+  )
+}
 
 EditOleadsForm.acl = {
   action: 'read',
   subject: 'olead'
 }
 
-export default EditOleadsForm;
+export default EditOleadsForm

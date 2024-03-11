@@ -19,6 +19,7 @@ import ConfirmationDialog from 'src/utility/confirmation'
 const Enquiries = () => {
   const columns = [
     { field: 'id', headerName: 'S.No.', flex: 1 },
+    { field: 'quotationNumber', headerName: 'Quotation Number', flex: 1 },
     {
       field: 'clientName',
       headerName: 'Client',
@@ -133,7 +134,7 @@ const Enquiries = () => {
 
   const handleAddEnquiry = async formData => {
     try {
-      const response = createEnquiry(formData)
+      const response = await createEnquiry(formData)
       toast.success('Enquiry Created Successfully', { duration: 3000 })
       await getEnquiries()
     } catch {
