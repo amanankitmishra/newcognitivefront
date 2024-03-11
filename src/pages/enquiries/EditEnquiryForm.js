@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { Typography } from '@mui/material';
-import { MenuItem } from '@mui/material';
-import { getClientList } from 'src/utility/api';
+import React, { useState, useEffect } from 'react'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import { Typography } from '@mui/material'
+import { MenuItem } from '@mui/material'
+import { getClientList } from 'src/utility/api'
 
 const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -17,22 +17,22 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
     project: '',
     projectType: '',
     remark: '',
-    uom: '',
-  });
+    uom: ''
+  })
 
-  const [clientList, setClientList] = useState([]);
+  const [clientList, setClientList] = useState([])
 
   const fetchClientList = async () => {
     try {
-      const response = await getClientList();
-      setClientList(response.data);
+      const response = await getClientList()
+      setClientList(response.data)
     } catch (error) {
-      console.log('Error fetching client list:', error);
+      console.log('Error fetching client list:', error)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchClientList();
+    fetchClientList()
     if (data) {
       setFormData({
         capacity: data.capacity || '',
@@ -42,50 +42,48 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
         project: data.project || '',
         projectType: data.projectType || '',
         remark: data.remark || '',
-        uom: data.uom || '',
+        uom: data.uom || ''
       })
     }
   }, [data])
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
+  const handleChange = e => {
+    const { name, value } = e.target
+    setFormData(prevData => ({
       ...prevData,
-      [name]: value,
-    }));
+      [name]: value
+    }))
     if (name === 'projectType') {
-      const uom = value === 'SPV' ? 'KWP' : value === 'SWH' ? 'LPD' : '';
-      setFormData((prevData) => ({
+      const uom = value === 'SPV' ? 'KWP' : value === 'SWH' ? 'LPD' : ''
+      setFormData(prevData => ({
         ...prevData,
-        uom,
-      }));
+        uom
+      }))
     }
-  };
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(data._id, formData);
-  };
-
-
+  const handleSubmit = e => {
+    e.preventDefault()
+    onSubmit(data._id, formData)
+  }
 
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2} maxWidth='sm'>
         <Grid item xs={12} sx={{ pb: 2 }}>
-          <Typography variant='h5'>Add New Enquiry</Typography>
+          <Typography variant='h5'>Edit Enquiry</Typography>
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Client"
+            label='Client'
             select
             fullWidth
-            name="clientId"
+            name='clientId'
             value={formData.clientId}
             onChange={handleChange}
             required
           >
-            {clientList.map((client) => (
+            {clientList.map(client => (
               <MenuItem key={client._id} value={client._id}>
                 {client.clientName}
               </MenuItem>
@@ -102,11 +100,12 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
             name='projectType'
             value={formData.projectType}
             onChange={handleChange}
-            fullWidth>
-            <MenuItem key={1} value={"SPV"}>
+            fullWidth
+          >
+            <MenuItem key={1} value={'SPV'}>
               SPV
             </MenuItem>
-            <MenuItem key={2} value={"SWH"}>
+            <MenuItem key={2} value={'SWH'}>
               SWH
             </MenuItem>
           </TextField>
@@ -115,46 +114,47 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
           <TextField label='Capacity' name='capacity' value={formData.capacity} onChange={handleChange} fullWidth />
         </Grid>
         <Grid item xs={6}>
-          <TextField
-            label='UOM'
-            select
-            disabled
-            name='uom'
-            value={formData.uom}
-            onChange={handleChange}
-            fullWidth>
-            <MenuItem key={1} value={"KWP"}>
+          <TextField label='UOM' select disabled name='uom' value={formData.uom} onChange={handleChange} fullWidth>
+            <MenuItem key={1} value={'KWP'}>
               KWP
             </MenuItem>
-            <MenuItem key={2} value={"LPD"}>
+            <MenuItem key={2} value={'LPD'}>
               LPD
             </MenuItem>
           </TextField>
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Offer Submitted"
+            label='Offer Submitted'
             select
             fullWidth
-            name="offerSubmitted"
+            name='offerSubmitted'
             value={formData.offerSubmitted}
             onChange={handleChange}
           >
-            <MenuItem key={1} value={"YES"}>
+            <MenuItem key={1} value={'YES'}>
               YES
             </MenuItem>
-            <MenuItem key={2} value={"NO"}>
+            <MenuItem key={2} value={'NO'}>
               NO
             </MenuItem>
           </TextField>
         </Grid>
         <Grid item xs={6}>
-          <TextField label='Enquiry Date' type='date' name='enquiryDate' value={formData.enquiryDate} onChange={handleChange} fullWidth InputLabelProps={{
-            shrink: true,
-          }}
+          <TextField
+            label='Enquiry Date'
+            type='date'
+            name='enquiryDate'
+            value={formData.enquiryDate}
+            onChange={handleChange}
+            fullWidth
+            InputLabelProps={{
+              shrink: true
+            }}
             InputProps={{
-              placeholder: 'dd/mm/yyyy',
-            }} />
+              placeholder: 'dd/mm/yyyy'
+            }}
+          />
         </Grid>
         <Grid item xs={6}>
           <TextField label='Remark' name='remark' value={formData.remark} onChange={handleChange} fullWidth multiline />
@@ -164,7 +164,7 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
       <Grid container sx={{ marginTop: 2 }} spacing={2} justifyContent='flex-end'>
         <Grid item>
           <Button type='submit' variant='contained' color='primary'>
-            Add
+            Update
           </Button>
         </Grid>
         <Grid item>
@@ -174,12 +174,12 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
         </Grid>
       </Grid>
     </form>
-  );
-};
+  )
+}
 
 EditEnquiryForm.acl = {
   action: 'read',
   subject: 'enquiry'
 }
 
-export default EditEnquiryForm;
+export default EditEnquiryForm

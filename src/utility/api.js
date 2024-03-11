@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost:5000'
+// const BASE_URL = 'http://localhost:5000'
 
-// const BASE_URL = "https://sea-lion-app-p56d8.ondigitalocean.app";
+const BASE_URL = 'https://sea-lion-app-p56d8.ondigitalocean.app'
 
 const instance = axios.create({
   baseURL: BASE_URL
@@ -292,6 +292,22 @@ export const getVendorList = () => {
 
 //Settings Routes
 
+export const fetchProposalNumbers = () => {
+  return instance.get('/proposalNumbers')
+}
+
+export const addProposalNumber = formData => {
+  return instance.post('/proposalNumber', formData)
+}
+
+export const markActiveProposalNumber = id => {
+  return instance.patch(`/proposalNumber/${id}`, { active: true })
+}
+
+export const deleteProposalNumber = id => {
+  return instance.delete(`/proposalNumber/${id}`)
+}
+
 export const fetchTradingProposalNumbers = () => {
   return instance.get('/tradingProposalNumbers')
 }
@@ -339,7 +355,6 @@ export const markActiveTradingEnquiryNumber = id => {
 export const deleteTradingEnquiryNumber = id => {
   return instance.delete(`/tradingEnquiryNumber/${id}`)
 }
-
 
 //TradingEnquiry
 
