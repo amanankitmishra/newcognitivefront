@@ -308,6 +308,22 @@ export const deleteTradingProposalNumber = id => {
   return instance.delete(`/tradingProposalNumber/${id}`)
 }
 
+export const fetchEnquiryNumbers = () => {
+  return instance.get('/enquiryNumbers')
+}
+
+export const addEnquiryNumber = formData => {
+  return instance.post('/enquiryNumber', formData)
+}
+
+export const markActiveEnquiryNumber = id => {
+  return instance.patch(`/enquiryNumber/${id}`, { active: true })
+}
+
+export const deleteEnquiryNumber = id => {
+  return instance.delete(`/enquiryNumber/${id}`)
+}
+
 export const fetchTradingEnquiryNumbers = () => {
   return instance.get('/tradingEnquiryNumbers')
 }
@@ -323,6 +339,7 @@ export const markActiveTradingEnquiryNumber = id => {
 export const deleteTradingEnquiryNumber = id => {
   return instance.delete(`/tradingEnquiryNumber/${id}`)
 }
+
 
 //TradingEnquiry
 
