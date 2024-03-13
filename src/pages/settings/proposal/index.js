@@ -146,7 +146,7 @@ const ProposalSettings = () => {
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <Card>
-            <CardHeader title='Trading Proposals Sequence'></CardHeader>
+            <CardHeader title='Proposals Sequence'></CardHeader>
             <CardContent>
               <div style={{ height: '400px', width: '100%' }}>
                 <DataGrid
