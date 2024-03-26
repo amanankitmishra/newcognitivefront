@@ -13,8 +13,8 @@ const defineRulesFor = (role, subject) => {
     can('manage', 'all')
   } else if (role === 'sales') {
     can(['read'], 'client')
-    can(['read'], 'enquiry')
-    can(['read'], 'proposal')
+    can(['read'], 'solarEnquiry')
+    can(['read'], 'solarProposal')
     can(['read'], 'salesorder')
     can(['read'], 'boq')
     can(['read'], 'dashboard-calendar')
@@ -27,6 +27,9 @@ const defineRulesFor = (role, subject) => {
     can(['read'], 'salesorder')
     can(['read'], 'client')
     can(['read'], 'olead')
+    can(['read'], 'salesorder')
+    can(['read'], 'tradingEnquiry')
+    can(['read'], 'tradingProposal')
     can(['read'], 'dashboard-calendar')
     can(['read'], 'meetings')
   } else {

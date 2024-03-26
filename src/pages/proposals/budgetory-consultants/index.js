@@ -152,7 +152,7 @@ const ConsultantProposals = () => {
 
 ConsultantProposals.acl = {
   action: 'read',
-  subject: 'proposal'
+  subject: 'solarProposal'
 }
 
 export default ConsultantProposals;

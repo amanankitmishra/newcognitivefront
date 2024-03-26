@@ -169,7 +169,7 @@ const AddEnquiryForm = ({ onSubmit, onCancel }) => {
 
 AddEnquiryForm.acl = {
   action: 'read',
-  subject: 'enquiry'
+  subject: 'solarEnquiry'
 }
 
 export default AddEnquiryForm;

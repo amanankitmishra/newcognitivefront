@@ -186,7 +186,7 @@ const EditEnquiryForm = ({ data, onSubmit, onCancel }) => {
 
 EditEnquiryForm.acl = {
   action: 'read',
-  subject: 'enquiry'
+  subject: 'tradingEnquiry'
 }
 
 export default EditEnquiryForm

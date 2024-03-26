@@ -277,7 +277,7 @@ const TradingEnquiries = () => {
 
 TradingEnquiries.acl = {
   action: 'read',
-  subject: 'enquiry'
+  subject: 'tradingEnquiry'
 }
 
 export default TradingEnquiries

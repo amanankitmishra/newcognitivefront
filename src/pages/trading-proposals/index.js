@@ -273,7 +273,7 @@ const Proposals = () => {
 
 Proposals.acl = {
   action: 'read',
-  subject: 'proposal'
+  subject: 'tradingProposal'
 }
 
 export default Proposals

@@ -153,7 +153,7 @@ const ContractorProposals = () => {
 
 ContractorProposals.acl = {
   action: 'read',
-  subject: 'proposal'
+  subject: 'tradingProposal'
 }
 
 export default ContractorProposals

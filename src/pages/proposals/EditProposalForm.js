@@ -226,7 +226,7 @@ const EditProposalForm = ({ data, onSubmit, onCancel }) => {
 
 EditProposalForm.acl = {
   action: 'read',
-  subject: 'proposal'
+  subject: 'prsolarProposaloposal'
 }
 
 export default EditProposalForm

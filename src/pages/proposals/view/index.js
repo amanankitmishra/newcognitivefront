@@ -258,7 +258,7 @@ const ViewProposal = () => {
 
 ViewProposal.acl = {
   action: 'read',
-  subject: 'proposal',
+  subject: 'solarProposal',
 };
 
 export default ViewProposal;

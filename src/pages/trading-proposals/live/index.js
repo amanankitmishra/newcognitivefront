@@ -154,7 +154,7 @@ const LiveProposals = () => {
 
 LiveProposals.acl = {
   action: 'read',
-  subject: 'proposal'
+  subject: 'tradingProposal'
 }
 
 export default LiveProposals

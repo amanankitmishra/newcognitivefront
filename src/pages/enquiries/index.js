@@ -279,7 +279,7 @@ const Enquiries = () => {
 
 Enquiries.acl = {
   action: 'read',
-  subject: 'enquiry'
+  subject: 'solarEnquiry'
 }
 
 export default Enquiries
