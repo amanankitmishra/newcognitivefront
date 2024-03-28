@@ -35,22 +35,26 @@ const AddProposalForm = ({ onSubmit, onCancel }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setFormData(prevData => ({
       ...prevData,
       [name]: value,
     }));
+
     if (name === 'quotedMarginValue' || name === 'quotedValue') {
-      const quotedMarginValue = parseFloat(formData.quotedMarginValue) || 0;
-      const quotedValue = parseFloat(formData.quotedValue) || 1;
+      setFormData(prevData => {
+        const quotedMarginValue = parseFloat(prevData.quotedMarginValue) || 0;
+        const quotedValue = parseFloat(prevData.quotedValue) || 1;
 
-      const calculatedQuotedMarginPercentage = (quotedMarginValue / quotedValue) * 100;
+        const calculatedQuotedMarginPercentage = (quotedMarginValue / quotedValue) * 100;
 
-      setFormData((prevData) => ({
-        ...prevData,
-        quotedMarginPercentage: isNaN(calculatedQuotedMarginPercentage) ? '' : calculatedQuotedMarginPercentage.toFixed(2),
-      }));
+        return {
+          ...prevData,
+          quotedMarginPercentage: isNaN(calculatedQuotedMarginPercentage) ? '' : calculatedQuotedMarginPercentage.toFixed(2),
+        };
+      });
     }
   };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
